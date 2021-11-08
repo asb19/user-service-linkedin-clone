@@ -1,3 +1,17 @@
+# compiled output
+dist
 node_modules
+
+# Logs
+logs
+*.log
+
 # Keep environment variables out of version control
 .env
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
