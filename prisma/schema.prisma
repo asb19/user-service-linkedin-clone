@@ -13,6 +13,13 @@ datasource db {
 model User {
   id     String  @id() @default(cuid())
   email  String  @unique()
-  Password String
+  altEmail  String?
+  firstName  String?
+  lastName   String?
+  contactNo  String?  @unique()
+  altContactNo  String?
+  Password String?
+  emailVerified  Boolean @default(false)
+  smsVerified    Boolean @default(false)
   createdAt  DateTime  @default(now())  
 }
