@@ -1,5 +1,5 @@
 import { User } from '.prisma/client';
-import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { UserByUserNameDto } from './dto/getUserByCred.dto';
 import { UserService } from './user.service';
@@ -15,7 +15,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('greet')
+  @Get('/greet')
   public async greet(): Promise<string> {
     return 'Greetings authenticated user';
   }
