@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import amqp from 'amqp-connection-manager';
@@ -24,6 +25,7 @@ async function bootstrap() {
   });
 
   await app.startAllMicroservices();
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(3001);
 }
 bootstrap();

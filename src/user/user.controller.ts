@@ -1,4 +1,4 @@
-import { Prisma, User } from '.prisma/client';
+import { User } from '.prisma/client';
 import {
   Body,
   Controller,
@@ -36,8 +36,10 @@ export class UserController {
   public async UpdateUser(
     @Body() body: UpdateUserDto,
     @Param('id') id: string,
+    @Query() query: { otp: string },
   ): Promise<User> {
-    const user = await this.userService.updateUser(id, body);
+    console.log('heheheh');
+    const user = await this.userService.updateUser(id, body, query.otp);
     console.log(user);
     return user;
   }
