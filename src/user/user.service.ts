@@ -3,9 +3,9 @@ import { HttpService } from '@nestjs/axios';
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
-import { genSalt, hash } from 'bcrypt';
+import { generateHash } from 'src/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/updateUserDto.dto';
 
@@ -24,7 +24,7 @@ export class UserService {
     });
   }
 
-  public async createUser(username: string): Promise<User> {
+  public async createUser(username: string, password: string): Promise<User> {
     return (
       (await this.prismaService.user.findUnique({
         where: {
@@ -35,6 +35,7 @@ export class UserService {
         data: {
           email: username,
           emailVerified: true,
+          Password: await generateHash(password),
         },
       }))
     );
@@ -55,8 +56,6 @@ export class UserService {
       .then((data) => data.data);
     if (!verificationStatus)
       throw new BadRequestException('verification failed');
-    const salt = await genSalt(10);
-    body.Password = await hash(body.Password, salt);
 
     const user = await this.prismaService.user.update({
       where: {
@@ -65,5 +64,40 @@ export class UserService {
       data: body,
     });
     return user;
+  }
+
+  public async resetPassword(
+    username: string,
+    Password: string,
+    otp: string,
+  ): Promise<User> {
+    const verificationStatus = await this.httpService
+      .post(`http://localhost:3005/communications/verifyOtp`, {
+        to: username,
+        code: otp,
+      })
+      .toPromise()
+      .then((data) => data.data);
+    if (!verificationStatus)
+      throw new BadRequestException('verification failed');
+
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: username,
+      },
+    });
+    if (!user)
+      throw new NotFoundException(
+        'User with this email not found, signup first!',
+      );
+
+    return await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        Password: await generateHash(Password),
+      },
+    });
   }
 }

@@ -1,3 +1,4 @@
+import { USER_TYPE } from '.prisma/client';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class UpdateUserDto {
@@ -14,11 +15,10 @@ export class UpdateUserDto {
   @IsString()
   public altContactNo: string;
 
+  @IsString()
+  public userType: USER_TYPE;
+
   @IsString({ message: 'please input primary contact no' })
   @IsNotEmpty()
   public contactNo: string;
-
-  @IsString({ message: 'please input password' })
-  @IsNotEmpty()
-  public Password: string;
 }

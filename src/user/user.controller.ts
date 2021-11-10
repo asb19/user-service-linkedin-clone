@@ -21,13 +21,14 @@ export class UserController {
   @Get('/byId')
   public async GetUser(@Query() query: UserByUserNameDto): Promise<User> {
     const user = await this.userService.findUser(query.username);
-    console.log(user);
     return user;
   }
 
   @Post('/create')
-  public async CreateUser(@Body() body: { email: string }): Promise<User> {
-    const user = await this.userService.createUser(body.email);
+  public async CreateUser(
+    @Body() body: { email: string; Password: string },
+  ): Promise<User> {
+    const user = await this.userService.createUser(body.email, body.Password);
     console.log(user);
     return user;
   }
@@ -38,9 +39,19 @@ export class UserController {
     @Param('id') id: string,
     @Query() query: { otp: string },
   ): Promise<User> {
-    console.log('heheheh');
     const user = await this.userService.updateUser(id, body, query.otp);
-    console.log(user);
+    return user;
+  }
+
+  @Put('/resetPassword')
+  public async ResetPassword(
+    @Body() body: { username: string; Password: string; otp: string },
+  ): Promise<User> {
+    const user = await this.userService.resetPassword(
+      body.username,
+      body.Password,
+      body.otp,
+    );
     return user;
   }
 

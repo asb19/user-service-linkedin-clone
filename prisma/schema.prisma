@@ -19,7 +19,13 @@ model User {
   contactNo  String?  @unique()
   altContactNo  String?
   Password String?
+  userType    USER_TYPE @default(individual)
   emailVerified  Boolean @default(false)
   smsVerified    Boolean @default(false)
   createdAt  DateTime  @default(now())  
+
+}
+enum USER_TYPE {
+  individual
+  recruiter
 }
