@@ -13,6 +13,44 @@ datasource db {
 model User {
   id     String  @id() @default(cuid())
   email  String  @unique()
-  Password String
+  altEmail  String?
+  firstName  String?
+  lastName   String?
+  contactNo  String?  @unique()
+  altContactNo  String?
+  Password String?
+  userType    USER_TYPE @default(individual)
+  emailVerified  Boolean @default(false)
+  smsVerified    Boolean @default(false)
   createdAt  DateTime  @default(now())  
+
+}
+
+model Country {
+  id   Int  @id @default(autoincrement())
+  name  String
+  phoneCode  String
+  State    State[]
+}
+
+model State {
+  id  Int  @id @default(autoincrement())
+  name String
+  fullName  String
+  countryId Int
+  Country   Country  @relation(fields: [countryId], references:[id])
+  City      City[]
+}
+
+model City {
+  id  Int  @id @default(autoincrement())
+  name String
+  fullName  String
+  stateId Int
+  State   State  @relation(fields: [stateId], references:[id])
+}
+
+enum USER_TYPE {
+  individual
+  recruiter
 }
