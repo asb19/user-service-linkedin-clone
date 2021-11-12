@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { HttpModule } from '@nestjs/axios';
+import { UserProfileModule } from './user-profile/user-profile.module';
 
 @Module({
-  imports: [UserModule, PrismaModule, HttpModule],
+  imports: [UserModule, PrismaModule, HttpModule, UserProfileModule],
   controllers: [AppController],
   providers: [AppService],
 })

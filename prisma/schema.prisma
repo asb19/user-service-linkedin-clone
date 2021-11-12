@@ -23,8 +23,42 @@ model User {
   emailVerified  Boolean @default(false)
   smsVerified    Boolean @default(false)
   createdAt  DateTime  @default(now())  
+  UserProfile    UserProfile?
 
 }
+
+model UserProfile {
+  userId      String @id
+  photoUrl    String?
+  dob         DateTime?  @db.Date
+  gender      GENDER
+  adhaarNo    String?
+  passportNo  String?
+  passportValidity  DateTime? @db.Date
+  passportPlaceAndCountryOfIssue  String?
+  currentLocationId  Int?
+  homeLocationId     Int?
+  preferredLocations               Int[]
+  mediaUrls           String[]
+  currentLocation    City?  @relation(fields: [currentLocationId], name: "CurrentLocation",  references: [id])
+  homeLocation    City?  @relation(fields: [homeLocationId], name: "HomeLocation" ,references: [id])
+  User        User     @relation(fields: [userId], references:[id])
+  UserEducation     UserEducation[]
+}
+
+model UserEducation {
+  userId     String  
+  id      String  @id @default(cuid())
+  degreeOrDiploma   String
+  field             String
+  fromTime          DateTime? @db.Date
+  endTime           DateTime? @db.Date
+  description       String
+  mediaUrls         String[]
+  statusId          Int       @default(1)
+  UserProfile       UserProfile  @relation(fields: [userId], references: [userId], onDelete:Cascade, onUpdate:NoAction)
+}
+
 
 model Country {
   id   Int  @id @default(autoincrement())
@@ -48,9 +82,18 @@ model City {
   fullName  String
   stateId Int
   State   State  @relation(fields: [stateId], references:[id])
+  currentLocationOf  UserProfile[] @relation("CurrentLocation")
+  homeLocationOf     UserProfile[] @relation("HomeLocation")
+
 }
 
 enum USER_TYPE {
   individual
   recruiter
+}
+
+enum GENDER {
+  Male
+  Female
+  Other
 }
