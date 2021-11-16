@@ -62,6 +62,10 @@ export class UserProfileService {
             ? body.userProfileDetails.currentLocationId
             : undefined,
 
+          homeLocationId: body.userProfileDetails.homeLocationId
+            ? body.userProfileDetails.homeLocationId
+            : undefined,
+
           preferredLocations: body.userProfileDetails.preferredLocations
             ? body.userProfileDetails.preferredLocations
             : undefined,
@@ -99,8 +103,8 @@ export class UserProfileService {
         UserEducation: {
           create: eduDetails,
         },
-        UserProfessionalDetail:
-          body.userProfessionalDetails && body.userProfessionalDetails.id
+        UserProfessionalDetail: body.userProfessionalDetails
+          ? body.userProfessionalDetails.id
             ? {
                 update: {
                   Experiences: { create: experienceDetails },
@@ -113,7 +117,8 @@ export class UserProfileService {
 
                   Experiences: { create: experienceDetails },
                 },
-              },
+              }
+          : undefined,
       },
     });
   }
@@ -182,6 +187,10 @@ export class UserProfileService {
           currentLocationId:
             body.userProfileDetails && body.userProfileDetails.currentLocationId
               ? body.userProfileDetails.currentLocationId
+              : undefined,
+          homeLocationId:
+            body.userProfileDetails && body.userProfileDetails.homeLocationId
+              ? body.userProfileDetails.homeLocationId
               : undefined,
           preferredLocations:
             body.userProfileDetails &&
