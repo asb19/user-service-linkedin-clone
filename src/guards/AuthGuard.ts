@@ -15,6 +15,7 @@ export class AuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
 
     try {
+      console.log('inside guard');
       const res = await this.httpService
         .get(`http://localhost:3000/auth/check`, {
           headers: {
@@ -24,6 +25,7 @@ export class AuthGuard implements CanActivate {
         .pipe()
         .toPromise();
       req.user = res.data;
+      console.log(res.data);
       return res.data;
     } catch (err) {
       Logger.error(err);

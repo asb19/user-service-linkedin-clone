@@ -23,8 +23,85 @@ model User {
   emailVerified  Boolean @default(false)
   smsVerified    Boolean @default(false)
   createdAt  DateTime  @default(now())  
+  UserProfile    UserProfile?
 
 }
+
+model UserProfile {
+  userId      String @id
+  photoUrl    String?
+  dob         DateTime?  @db.Date
+  gender      GENDER
+  adhaarNo    String?
+  passportNo  String?
+  passportValidity  DateTime? @db.Date
+  passportPlaceAndCountryOfIssue  String?
+  currentLocationId  Int?
+  homeLocationId     Int?
+  preferredLocations               Int[]
+  mediaUrls           String[]
+  currentLocation    City?  @relation(fields: [currentLocationId], name: "CurrentLocation",  references: [id])
+  homeLocation    City?  @relation(fields: [homeLocationId], name: "HomeLocation" ,references: [id])
+  User        User     @relation(fields: [userId], references:[id])
+  UserEducation     UserEducation[]
+  UserProfessionalDetail   UserProfessionalDetail?
+}
+
+model UserEducation {
+  userId     String  
+  id      String  @id @default(cuid())
+  degreeOrDiploma   String
+  field             String
+  fromTime          DateTime? @db.Date
+  endTime           DateTime? @db.Date
+  description       String
+  mediaUrls         String[]
+  statusId          Int       @default(1)
+  instituteId       Int?
+  UserProfile       UserProfile  @relation(fields: [userId], references: [userId], onDelete:Cascade, onUpdate:NoAction)
+  Institute         Organisation? @relation(fields: [instituteId],references: [id])
+}
+
+model UserProfessionalDetail {
+  id            String    @id @default(cuid())
+  userId        String
+  description  String?
+  keySkills    String[]
+  UserProfile  UserProfile? @relation(fields: [userId],  references: [userId])
+  Experiences  UserExperience[]
+
+}
+
+model UserExperience {
+id     String   @id   @default(cuid())
+professionalId  String
+designation     String
+organisationId  Int?
+industry        String
+fromTime          DateTime? @db.Date
+endTime           DateTime? @db.Date 
+mediaUrls         String[]
+isCurrent         Boolean
+Organisation      Organisation?   @relation(fields: [organisationId], references: [id])   
+UserProfessionalDetail  UserProfessionalDetail  @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+}
+
+model Organisation {
+  id      Int   @id @default(autoincrement())
+  fullName  String
+  address   String?
+  cityId    Int?
+  zipcode   String?
+  affiliation   String?
+  isInstitute   Boolean @default(true)
+  isVerified    Boolean @default(false)
+  City          City?   @relation(fields: [cityId],  references: [id])
+  UserEducation UserEducation[]
+  UserExperience UserExperience[]
+
+}
+
 
 model Country {
   id   Int  @id @default(autoincrement())
@@ -48,9 +125,19 @@ model City {
   fullName  String
   stateId Int
   State   State  @relation(fields: [stateId], references:[id])
+  currentLocationOf  UserProfile[] @relation("CurrentLocation")
+  homeLocationOf     UserProfile[] @relation("HomeLocation")
+  organiseLocOf      Organisation[]
+
 }
 
 enum USER_TYPE {
   individual
   recruiter
+}
+
+enum GENDER {
+  Male
+  Female
+  Other
 }
