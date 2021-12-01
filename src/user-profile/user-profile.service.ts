@@ -6,7 +6,7 @@ import { CreateUserProfileDto } from './dto/createUserProfileDto.dto';
 
 @Injectable()
 export class UserProfileService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) { }
 
   public async createProfile(
     body: CreateUserProfileDto,
@@ -15,38 +15,69 @@ export class UserProfileService {
     const eduDetails =
       body.userEducationDetails && body.userEducationDetails.length > 0
         ? body.userEducationDetails.map((detail) => {
-            const insId = detail.instituteId;
-            delete detail.instituteId;
-            return {
-              ...detail,
-              fromTime: new Date(detail.fromTime),
-              endTime: new Date(detail.endTime),
-              Institute: insId
-                ? { connect: { id: insId } }
-                : {
-                    create: detail.Institute,
-                  },
-            };
-          })
+          const insId = detail.instituteId;
+          delete detail.instituteId;
+          return {
+            ...detail,
+            fromTime: new Date(detail.fromTime),
+            endTime: new Date(detail.endTime),
+            Institute: insId
+              ? { connect: { id: insId } }
+              : {
+                create: detail.Institute,
+              },
+          };
+        })
         : undefined;
 
     const experienceDetails =
       body.userExperienceDetails && body.userExperienceDetails.length > 0
         ? body.userExperienceDetails.map((detail) => {
-            const oId = detail.organisationId;
-            delete detail.organisationId;
-            return {
-              ...detail,
-              fromTime: new Date(detail.fromTime),
-              endTime: new Date(detail.endTime),
-              Organisation: !oId
-                ? {
-                    create: detail.Organisation,
-                  }
-                : { connect: { id: oId } },
-            };
-          })
+          const oId = detail.organisationId;
+          delete detail.organisationId;
+          return {
+            ...detail,
+            fromTime: new Date(detail.fromTime),
+            endTime: new Date(detail.endTime),
+            Organisation: !oId
+              ? {
+                create: detail.Organisation,
+              }
+              : { connect: { id: oId } },
+          };
+        })
         : undefined;
+    //took certificate details  object from body............
+    const certDetails =
+      body.userCertificateDetails && body.userCertificateDetails.length > 0
+        ? body.userCertificateDetails.map((detail) => {
+          return {
+            ...detail,
+            issuedAt: new Date(detail.issuedAt)
+
+          }
+        }) : undefined;
+    //took award details object from body./..........
+    const awardDetails =
+      body.userAwardsDetails && body.userAwardsDetails.length > 0
+        ? body.userAwardsDetails.map((detail) => {
+          return {
+            ...detail,
+            issuedDate: new Date(detail.issuedDate)
+
+          }
+        }) : undefined;
+    //took tarining object from body....
+    const trainingDetails =
+      body.userTraingDetails && body.userTraingDetails.length > 0
+        ? body.userTraingDetails.map((detail) => {
+          return {
+            ...detail,
+            startDate: new Date(detail.startDate), //change type string -> date
+            endDate: new Date(detail.endDate)
+
+          }
+        }) : undefined;
 
     const user = await this.prismaService.userProfile.findUnique({
       where: { userId },
@@ -105,19 +136,28 @@ export class UserProfileService {
         },
         UserProfessionalDetail: body.userProfessionalDetails
           ? body.userProfessionalDetails.id
-            ? {
-                update: {
-                  Experiences: { create: experienceDetails },
-                },
-              }
-            : {
-                create: {
-                  description: body.userProfessionalDetails.description,
-                  keySkills: body.userProfessionalDetails.keySkills,
+            ?  //if professionalDetails id is given
+            {
+              update: {
+                Experiences: { create: experienceDetails },
+                UserCertificateDetails: { create: certDetails },
+                UserAwardsDetails: { create: awardDetails },
+                UserTrainingDetails: { create: trainingDetails }
 
-                  Experiences: { create: experienceDetails },
-                },
-              }
+              },
+            }
+            : //if professionalDetails id is null
+            {
+              create: {
+                description: body.userProfessionalDetails.description,
+                keySkills: body.userProfessionalDetails.keySkills,
+
+                Experiences: { create: experienceDetails },
+                UserCertificateDetails: { create: certDetails },
+                UserAwardsDetails: { create: awardDetails },
+                UserTrainingDetails: { create: trainingDetails }
+              },
+            }
           : undefined,
       },
     });
@@ -194,7 +234,7 @@ export class UserProfileService {
               : undefined,
           preferredLocations:
             body.userProfileDetails &&
-            body.userProfileDetails.preferredLocations
+              body.userProfileDetails.preferredLocations
               ? body.userProfileDetails.preferredLocations
               : undefined,
         },
@@ -251,7 +291,113 @@ export class UserProfileService {
           },
         },
       });
+    } else if (body.userCertificateDetails) {  //TODO: edit certificateDetails 
+      const certificateDetails = body.userCertificateDetails.map((detail) => {
+        return {
+          ...detail,
+          issuedAt: new Date(detail.issuedAt)
+        }
+      });
+      return this.prismaService.userProfile.update({
+        where: {
+          userId,
+        },
+        data: {
+          UserProfessionalDetail: {
+            update: {
+              UserCertificateDetails: {
+                update: {
+                  where: {
+                    id: certificateDetails[0].id,
+                  },
+                  data: {
+                    certificateName: certificateDetails[0].certificateName,
+                    issuedBy: certificateDetails[0].issuedBy,
+                    licenceNumber: certificateDetails[0].licenceNumber,
+                    issuedAt: certificateDetails[0].issuedAt,
+                    certificateURL: certificateDetails[0].certificateURL,
+
+                  }
+                }
+              }
+
+            }
+          }
+
+        }
+      })
+    } else if (body.userAwardsDetails) { //TODO : edit award details
+      const awardDet = body.userAwardsDetails.map((detail) => {
+        return {
+          ...detail,
+          issuedDate: new Date(detail.issuedDate)
+        }
+      });
+      return this.prismaService.userProfile.update({
+        where: {
+          userId,
+        },
+        data: {
+          UserProfessionalDetail: {
+            update: {
+              UserAwardsDetails: {
+                update: {
+                  where: {
+                    id: awardDet[0].id,
+                  },
+                  data: {
+                    issuedDate: awardDet[0].issuedDate,
+
+                    title: awardDet[0].title,
+                    issuedBy: awardDet[0].issuedBy,
+                    awardsDescription: awardDet[0].awardsDescription ? awardDet[0].awardsDescription : undefined
+                  }
+                }
+              }
+            }
+          }
+        }
+
+      })
+    } else if (body.userTraingDetails) {
+      const trainingDet = body.userTraingDetails.map((detail) => {
+        return {
+          ...detail,
+          endDate: new Date(detail.endDate),
+          startDate: new Date(detail.startDate)
+        }
+      });
+
+      return this.prismaService.userProfile.update({
+        where: {
+          userId
+        },
+        data: {
+          UserProfessionalDetail: {
+            update: {
+              UserTrainingDetails: {
+                update: {
+                  where: {
+                    id: trainingDet[0].id,
+                  },
+                  data: {
+                    title: trainingDet[0].title,
+                    organizer: trainingDet[0].organizer,
+                    startDate: trainingDet[0].startDate,
+                    endDate: trainingDet[0].endDate,
+                    trainingDecs: trainingDet[0].trainingDecs ? trainingDet[0].trainingDecs : undefined
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      })
     }
+
+
+
   }
 
   public async getProfileDetails(userId: string): Promise<UserProfile> {
@@ -278,6 +424,9 @@ export class UserProfileService {
         UserProfessionalDetail: {
           include: {
             Experiences: true,
+            UserCertificateDetails: true,
+            UserAwardsDetails: true,
+            UserTrainingDetails: true,
           },
         },
       },

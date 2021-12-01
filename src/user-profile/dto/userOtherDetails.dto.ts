@@ -54,3 +54,33 @@ export class UserProfileDto {
   homeLocationId?: number;
   preferredLocations?: number[];
 }
+
+export class UserCertificateDetailsDto {
+  id?: string;
+  certificateName: string;
+  issuedBy: string;
+  licenceNumber: string;
+  issuedAt?: string;
+  certificateURL: string;
+
+}
+
+export class UserAwardsDetailsDto {
+  id?: string;
+  title: string;
+  issuedBy: string;
+  issuedDate: string;
+  awardsDescription?: string;
+  mediaUrls?: string[];
+
+}
+
+export class UserTrainingDetailsDto {
+  id?: string;
+  title: string;
+  organizer: string;
+  startDate: string;
+  endDate: string;
+  trainingDecs?: string;
+  mediaUrls?: string[];
+}
