@@ -4,6 +4,9 @@ import {
   UserExperienceDetailsDto,
   UserProfessionalDetailsDto,
   UserProfileDto,
+  UserCertificateDetailsDto,
+  UserAwardsDetailsDto,
+  UserTrainingDetailsDto,
 } from './userOtherDetails.dto';
 
 export class CreateUserProfileDto {
@@ -18,4 +21,13 @@ export class CreateUserProfileDto {
 
   @Type(() => UserExperienceDetailsDto)
   userExperienceDetails: UserExperienceDetailsDto[];
+
+  @Type(() => UserCertificateDetailsDto)
+  userCertificateDetails: UserCertificateDetailsDto[];
+
+  @Type(() => UserAwardsDetailsDto)
+  userAwardsDetails: UserAwardsDetailsDto[];
+
+  @Type(() => UserTrainingDetailsDto)
+  userTraingDetails: UserTrainingDetailsDto[];
 }
