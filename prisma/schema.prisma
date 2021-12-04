@@ -128,16 +128,19 @@ model UserTrainingDetails {
 }
 
 model Organisation {
-  id             Int              @id @default(autoincrement())
-  fullName       String
-  address        String?
-  cityId         Int?
-  zipcode        String?
-  affiliation    String?
-  isInstitute    Boolean          @default(true)
-  isVerified     Boolean          @default(false)
-  City           City?            @relation(fields: [cityId], references: [id])
-  UserEducation  UserEducation[]
+  id      Int   @id @default(autoincrement())
+  fullName  String
+  location   String?
+  cityId    Int?
+  zipcode   String?
+  estaclishedDate      DateTime? @db.Date()
+  logo      String?
+  affiliation   String?
+  description   String?  
+  isInstitute   Boolean @default(true)
+  isVerified    Boolean @default(false)
+  City          City?   @relation(fields: [cityId],  references: [id])
+  UserEducation UserEducation[]
   UserExperience UserExperience[]
 }
 
