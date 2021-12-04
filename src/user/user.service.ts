@@ -56,6 +56,13 @@ export class UserService {
       .then((data) => data.data);
     if (!verificationStatus)
       throw new BadRequestException('verification failed');
+    const findUser = await this.prismaService.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!findUser.emailVerified) throw new BadRequestException('Signup first');
 
     const user = await this.prismaService.user.update({
       where: {

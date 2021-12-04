@@ -69,7 +69,6 @@ export class UserCertificateDetailsDto {
   licenceNumber: string;
   issuedAt?: string;
   certificateURL: string;
-
 }
 
 export class UserAwardsDetailsDto {
@@ -79,7 +78,6 @@ export class UserAwardsDetailsDto {
   issuedDate: string;
   awardsDescription?: string;
   mediaUrls?: string[];
-
 }
 
 export class UserTrainingDetailsDto {
