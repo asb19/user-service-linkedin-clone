@@ -139,7 +139,6 @@ model Organisation {
   City           City?            @relation(fields: [cityId], references: [id])
   UserEducation  UserEducation[]
   UserExperience UserExperience[]
-
 }
 
 model Country {
