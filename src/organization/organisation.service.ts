@@ -1,14 +1,14 @@
 import { Organisation } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { OrganisationDetailsDto } from 'src/user-profile/dto/userOtherDetails.dto';
+import { OrganisationCreateDetailsDto } from 'src/user-profile/dto/userOtherDetails.dto';
 
 @Injectable()
 export class OrganisationService {
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async createOrganisation(
-    body: OrganisationDetailsDto,
+    body: OrganisationCreateDetailsDto,
   ): Promise<Organisation> {
     const {
       fullName,
