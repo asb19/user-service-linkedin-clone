@@ -14,11 +14,18 @@ export class UserEducationDetailsDto {
 }
 
 export class OrganisationDetailsDto {
-  fullName: string;
-  address?: string;
-  cityId: number;
-  zipcode?: string;
-  affiliation?: string;
+  [x: string]: any;
+  public fullName: string;
+  public location?: string;
+  public cityId: number;
+  public zipcode?: string;
+  public estaclishedDate?: Date;
+  public affiliation?: string;
+  public logo?: string;
+  public description?: string;
+  public isInstitute: boolean;
+  public isVerified: boolean;
+  public type: string;
 }
 
 export class UserProfessionalDetailsDto {
@@ -53,4 +60,34 @@ export class UserProfileDto {
   currentLocationId?: number;
   homeLocationId?: number;
   preferredLocations?: number[];
+}
+
+export class UserCertificateDetailsDto {
+  id?: string;
+  certificateName: string;
+  issuedBy: string;
+  licenceNumber: string;
+  issuedAt?: string;
+  certificateURL: string;
+
+}
+
+export class UserAwardsDetailsDto {
+  id?: string;
+  title: string;
+  issuedBy: string;
+  issuedDate: string;
+  awardsDescription?: string;
+  mediaUrls?: string[];
+
+}
+
+export class UserTrainingDetailsDto {
+  id?: string;
+  title: string;
+  organizer: string;
+  startDate: string;
+  endDate: string;
+  trainingDecs?: string;
+  mediaUrls?: string[];
 }

@@ -11,123 +11,164 @@ datasource db {
 }
 
 model User {
-  id     String  @id() @default(cuid())
-  email  String  @unique()
-  altEmail  String?
-  firstName  String?
-  lastName   String?
-  contactNo  String?  @unique()
+  id            String       @id @default(cuid())
+  email         String       @unique
+  altEmail      String?
+  firstName     String?
+  lastName      String?
+  contactNo     String?      @unique
   altContactNo  String?
-  Password String?
-  userType    USER_TYPE @default(individual)
-  emailVerified  Boolean @default(false)
-  smsVerified    Boolean @default(false)
-  createdAt  DateTime  @default(now())  
-  UserProfile    UserProfile?
+  Password      String?
+  userType      USER_TYPE    @default(individual)
+  emailVerified Boolean      @default(false)
+  smsVerified   Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  UserProfile   UserProfile?
 
 }
 
 model UserProfile {
-  userId      String @id
-  photoUrl    String?
-  dob         DateTime?  @db.Date
-  gender      GENDER
-  adhaarNo    String?
-  passportNo  String?
-  passportValidity  DateTime? @db.Date
-  passportPlaceAndCountryOfIssue  String?
-  currentLocationId  Int?
-  homeLocationId     Int?
-  preferredLocations               Int[]
-  mediaUrls           String[]
-  currentLocation    City?  @relation(fields: [currentLocationId], name: "CurrentLocation",  references: [id])
-  homeLocation    City?  @relation(fields: [homeLocationId], name: "HomeLocation" ,references: [id])
-  User        User     @relation(fields: [userId], references:[id])
-  UserEducation     UserEducation[]
-  UserProfessionalDetail   UserProfessionalDetail?
+  userId                         String                  @id
+  photoUrl                       String?
+  dob                            DateTime?               @db.Date
+  gender                         GENDER
+  adhaarNo                       String?
+  passportNo                     String?
+  passportValidity               DateTime?               @db.Date
+  passportPlaceAndCountryOfIssue String?
+  currentLocationId              Int?
+  homeLocationId                 Int?
+  preferredLocations             Int[]
+  mediaUrls                      String[]
+  currentLocation                City?                   @relation(fields: [currentLocationId], name: "CurrentLocation", references: [id])
+  homeLocation                   City?                   @relation(fields: [homeLocationId], name: "HomeLocation", references: [id])
+  User                           User                    @relation(fields: [userId], references: [id])
+  UserEducation                  UserEducation[]
+  UserProfessionalDetail         UserProfessionalDetail?
 }
 
 model UserEducation {
-  userId     String  
-  id      String  @id @default(cuid())
-  degreeOrDiploma   String
-  field             String
-  fromTime          DateTime? @db.Date
-  endTime           DateTime? @db.Date
-  description       String
-  mediaUrls         String[]
-  statusId          Int       @default(1)
-  instituteId       Int?
-  UserProfile       UserProfile  @relation(fields: [userId], references: [userId], onDelete:Cascade, onUpdate:NoAction)
-  Institute         Organisation? @relation(fields: [instituteId],references: [id])
+  userId          String
+  id              String        @id @default(cuid())
+  degreeOrDiploma String
+  field           String
+  fromTime        DateTime?     @db.Date
+  endTime         DateTime?     @db.Date
+  description     String
+  mediaUrls       String[]
+  statusId        Int           @default(1)
+  instituteId     Int?
+  UserProfile     UserProfile   @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
+  Institute       Organisation? @relation(fields: [instituteId], references: [id])
 }
 
 model UserProfessionalDetail {
-  id            String    @id @default(cuid())
-  userId        String
-  description  String?
-  keySkills    String[]
-  UserProfile  UserProfile? @relation(fields: [userId],  references: [userId])
-  Experiences  UserExperience[]
+  id          String           @id @default(cuid())
+  userId      String           @unique
+  description String?
+  keySkills   String[]
+  UserProfile UserProfile?     @relation(fields: [userId], references: [userId])
+  Experiences UserExperience[]
 
+  UserCertificateDetails UserCertificateDetails[]
+  UserAwardsDetails      UserAwardsDetails[]
+  UserTrainingDetails    UserTrainingDetails[]
 }
 
 model UserExperience {
-id     String   @id   @default(cuid())
-professionalId  String
-designation     String
-organisationId  Int?
-industry        String
-fromTime          DateTime? @db.Date
-endTime           DateTime? @db.Date 
-mediaUrls         String[]
-isCurrent         Boolean
-Organisation      Organisation?   @relation(fields: [organisationId], references: [id])   
-UserProfessionalDetail  UserProfessionalDetail  @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id                     String                 @id @default(cuid())
+  professionalId         String
+  designation            String
+  organisationId         Int?
+  industry               String
+  fromTime               DateTime?              @db.Date
+  endTime                DateTime?              @db.Date
+  mediaUrls              String[]
+  isCurrent              Boolean
+  Organisation           Organisation?          @relation(fields: [organisationId], references: [id])
+  UserProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+}
+
+model UserCertificateDetails {
+  id                     String                 @id @default(cuid())
+  professionalId         String
+  certificateName        String
+  issuedBy               String
+  licenceNumber          String
+  issuedAt               DateTime?              @db.Date
+  certificateURL         String
+  UserProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+
+}
+
+model UserAwardsDetails {
+  id                     String                 @id @default(cuid())
+  professionalId         String
+  title                  String
+  issuedBy               String
+  issuedDate             DateTime               @db.Date
+  awardsDescription      String?
+  mediaUrls              String[]
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model UserTrainingDetails {
+  id                     String                 @id @default(cuid())
+  professionalId         String
+  title                  String
+  organizer              String
+  startDate              DateTime               @db.Date
+  endDate                DateTime               @db.Date
+  trainingDecs           String?
+  mediaUrls              String[]
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
 }
 
 model Organisation {
   id      Int   @id @default(autoincrement())
   fullName  String
-  address   String?
+  location   String?
   cityId    Int?
   zipcode   String?
+  estaclishedDate      DateTime? @db.Date()
+  logo      String?
   affiliation   String?
+  description   String?  
   isInstitute   Boolean @default(true)
   isVerified    Boolean @default(false)
   City          City?   @relation(fields: [cityId],  references: [id])
   UserEducation UserEducation[]
   UserExperience UserExperience[]
-
 }
 
-
 model Country {
-  id   Int  @id @default(autoincrement())
-  name  String
-  phoneCode  String
-  State    State[]
+  id        Int     @id @default(autoincrement())
+  name      String
+  phoneCode String
+  State     State[]
 }
 
 model State {
-  id  Int  @id @default(autoincrement())
-  name String
+  id        Int     @id @default(autoincrement())
+  name      String
   fullName  String
   countryId Int
-  Country   Country  @relation(fields: [countryId], references:[id])
+  Country   Country @relation(fields: [countryId], references: [id])
   City      City[]
 }
 
 model City {
-  id  Int  @id @default(autoincrement())
-  name String
-  fullName  String
-  stateId Int
-  State   State  @relation(fields: [stateId], references:[id])
-  currentLocationOf  UserProfile[] @relation("CurrentLocation")
-  homeLocationOf     UserProfile[] @relation("HomeLocation")
-  organiseLocOf      Organisation[]
+  id                Int            @id @default(autoincrement())
+  name              String
+  fullName          String
+  stateId           Int
+  State             State          @relation(fields: [stateId], references: [id])
+  currentLocationOf UserProfile[]  @relation("CurrentLocation")
+  homeLocationOf    UserProfile[]  @relation("HomeLocation")
+  organiseLocOf     Organisation[]
 
 }
 
