@@ -1,6 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { Organisation } from '.prisma/client';
-import { Body, Controller, Get, Post, Put, Req } from '@nestjs/common';
-import { OrganisationCreateDetailsDto } from 'src/user-profile/dto/userOtherDetails.dto';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
 import { OrganisationService } from './organisation.service';
 
 @Controller('organisation')
@@ -8,24 +9,27 @@ export class OrganisationController {
   OrganisationService: any;
   public constructor(
     private readonly organisationService: OrganisationService,
-  ) {}
+  ) { }
 
   @Post('/create')
   private async createOrganisation(
-    @Body() body: OrganisationCreateDetailsDto,
+    @Body() body: CreateOrganisationDto,
   ): Promise<Organisation> {
     return await this.organisationService.createOrganisation(body);
   }
 
-  // @Put('/edit')
-  // private async editOrganisation(
-  //   @Body() body: OrganisationDetailsDto,
-  // ):Promise<Organisation>{
+  @Put('/edit/:id')
+  private async editOrganisation(
+    @Body() body: CreateOrganisationDto,
+    @Param('id') id: string,
+  ): Promise<Organisation> {
+    return await this.organisationService.editOrganisationDetails(body, id)
+  }
 
-  // }
-
-  // @Get('/getorganisation')
-  // private async getOrganisation(@Req() req): Promise<Organisation> {
-  //   return await this.organisationService.getOrganisationdetails();
-  // }
+  @Get('/getorganisation/:id')
+  private async getOrganisation(
+    @Param('id') id: string,
+  ): Promise<Organisation> {
+    return await this.organisationService.getOrganisationDetails(id);
+  }
 }
