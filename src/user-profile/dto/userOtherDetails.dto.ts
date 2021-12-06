@@ -89,17 +89,3 @@ export class UserTrainingDetailsDto {
   trainingDecs?: string;
   mediaUrls?: string[];
 }
-export class OrganisationCreateDetailsDto {
-  [x: string]: any;
-  public fullName: string;
-  public location?: string;
-  public cityId: number;
-  public zipcode?: string;
-  public estaclishedDate?: Date;
-  public affiliation?: string;
-  public logo?: string;
-  public description?: string;
-  public isInstitute: boolean;
-  public isVerified: boolean;
-  public type: string;
-}
