@@ -70,15 +70,15 @@ export class OrganisationService {
         },
       });
       return organisation;
-    } else if (!!body.organisationDetails.id) {
+    } else if (body.organisationDetails.id) {
 
       return this.prismaService.organisation.update({
         where: {
-          id: parseInt(body.organisationDetails.id)
+          id: body.organisationDetails.id
         },
         data: {
           OrgAwardsDetails: { create: awardDetails },
-          OrgTrainingDetails: { create: trainingDetails }
+          OrgTrainingDetails: { create: trainingDetails },
         }
       })
     }
@@ -107,7 +107,7 @@ export class OrganisationService {
         logo,
 
         estaclishedDate,
-        isVerified,
+
       } = body.organisationDetails;
       return this.prismaService.organisation.update({
         where: {
@@ -122,12 +122,10 @@ export class OrganisationService {
           logo,
 
           estaclishedDate,
-          isVerified,
+
         }
       });
-    }
-
-    if (body.orgAwardsDetails) {
+    } else if (body.orgAwardsDetails) {
       //TODO : edit award details
       const awardDet = body.orgAwardsDetails.map((detail) => {
         return {
@@ -158,8 +156,7 @@ export class OrganisationService {
           }
         }
       });
-    }
-    if (body.orgTrainingDetails) {
+    } else if (body.orgTrainingDetails) {
       const trainingDet = body.orgTrainingDetails.map((detail) => {
         return {
           ...detail,
