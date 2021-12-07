@@ -128,17 +128,58 @@ model UserTrainingDetails {
 }
 
 model Organisation {
-  id             Int              @id @default(autoincrement())
-  fullName       String
-  address        String?
-  cityId         Int?
-  zipcode        String?
-  affiliation    String?
-  isInstitute    Boolean          @default(true)
-  isVerified     Boolean          @default(false)
-  City           City?            @relation(fields: [cityId], references: [id])
-  UserEducation  UserEducation[]
-  UserExperience UserExperience[]
+  id                 Int                  @id @default(autoincrement())
+  fullName           String
+  location           String?
+  cityId             Int?
+  zipcode            String?
+  estaclishedDate    DateTime?            @db.Date
+  logo               String?
+  affiliation        String?
+  description        String?
+  isInstitute        Boolean              @default(true)
+  isVerified         Boolean              @default(false)
+  City               City?                @relation(fields: [cityId], references: [id])
+  UserEducation      UserEducation[]
+  UserExperience     UserExperience[]
+  OrgAwardsDetails   OrgAwardsDetails[]
+  OrgTrainingDetails OrgTrainingDetails[]
+  OrgCourseDetails   OrgCourseDetails[]
+}
+
+model OrgAwardsDetails {
+  id                String        @id @default(cuid())
+  organisationId    Int?
+  title             String
+  issuedBy          String
+  issuedDate        DateTime      @db.Date
+  awardsDescription String?
+  mediaUrls         String[]
+  Organisation      Organisation? @relation(fields: [organisationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+}
+
+model OrgTrainingDetails {
+  id             String        @id @default(cuid())
+  organisationId Int?
+  title          String
+  organizer      String
+  startDate      DateTime      @db.Date
+  endDate        DateTime      @db.Date
+  trainingDecs   String?
+  mediaUrls      String[]
+  Organisation   Organisation? @relation(fields: [organisationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+}
+
+model OrgCourseDetails {
+  id             String        @id @default(cuid())
+  organisationId Int?
+  title          String
+  affiliatedTo   String?
+  mediaUrls      String[]
+  Organisation   Organisation? @relation(fields: [organisationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
 }
 
 model Country {
