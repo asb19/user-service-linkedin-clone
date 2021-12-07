@@ -201,7 +201,7 @@ export class OrganisationService {
       });
 
     } else if(body.orgCourseDetails){
-      const CourseDetails = body.orgCourseDetails.map((details)=>{
+      const courseDetails = body.orgCourseDetails.map((details)=>{
         return {...details}
       })
 
@@ -213,11 +213,11 @@ export class OrganisationService {
           OrgCourseDetails:{
             update:{
               where:{
-                id: CourseDetails[0].id,
+                id: courseDetails[0].id,
               },
               data:{
-                title: CourseDetails[0].title,
-                affiliatedTo: CourseDetails[0].affiliatedTo,
+                title: courseDetails[0].title,
+                affiliatedTo: courseDetails[0].affiliatedTo,
               }
             }
           }
