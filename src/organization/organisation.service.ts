@@ -79,6 +79,7 @@ export class OrganisationService {
         data: {
           OrgAwardsDetails: { create: awardDetails },
           OrgTrainingDetails: { create: trainingDetails },
+          OrgContactDetailsDto: {create:}
         }
       })
     }
@@ -204,6 +205,7 @@ export class OrganisationService {
 
         OrgAwardsDetails: true,
         OrgTrainingDetails: true,
+        OrgContactDetails:true,
       },
     });
     if (!organisation) {
