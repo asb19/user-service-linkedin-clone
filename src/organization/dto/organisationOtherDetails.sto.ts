@@ -32,6 +32,15 @@ export class OrgTrainingDetailsDto {
     mediaUrls?: string[];
 }
 
+export class OrgContactDetailsDto{
+    id?: string;
+    emailId:   string;
+    altEmailId:   string;
+    contactNumber:   string;
+    altContactNum:   string;
+    websiteUrl:      string;
+
+}
 export class OrgCourseDetailsDto{
     id?: string
     title: string;
