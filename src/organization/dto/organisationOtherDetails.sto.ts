@@ -31,3 +31,12 @@ export class OrgTrainingDetailsDto {
     trainingDecs?: string;
     mediaUrls?: string[];
 }
+
+export class OrgCourseDetailsDto{
+    id?: string
+    title: string;
+    affiliatedTo?: string;
+    mediaUrls : string[];
+
+
+}

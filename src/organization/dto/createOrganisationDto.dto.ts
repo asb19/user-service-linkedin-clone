@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import {
     OrganisationCreateDetailsDto,
     OrgAwardsDetailsDto,
+    OrgCourseDetailsDto,
     OrgTrainingDetailsDto,
 } from './organisationOtherDetails.sto';
 export class CreateOrganisationDto {
@@ -14,4 +15,7 @@ export class CreateOrganisationDto {
 
     @Type(() => OrgTrainingDetailsDto)
     orgTrainingDetails: OrgTrainingDetailsDto[];
+
+    @Type(() => OrgCourseDetailsDto)
+    orgCourseDetails:OrgCourseDetailsDto[];
 }
