@@ -41,3 +41,11 @@ export class OrgContactDetailsDto{
     websiteUrl:      string;
 
 }
+export class OrgCourseDetailsDto{
+    id?: string
+    title: string;
+    affiliatedTo?: string;
+    mediaUrls : string[];
+
+
+}

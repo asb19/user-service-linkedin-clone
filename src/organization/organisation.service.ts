@@ -21,6 +21,16 @@ export class OrganisationService {
           };
         })
         : undefined;
+
+    const courseDetails =
+        body.orgCourseDetails && body.orgCourseDetails.length > 0
+        ? body.orgCourseDetails.map((details) =>{
+          return {
+            ...details
+          }
+        })
+        :undefined
+
     //took tarining object from body....
     const trainingDetails =
       body.orgTrainingDetails && body.orgTrainingDetails.length > 0
@@ -80,6 +90,7 @@ export class OrganisationService {
           OrgAwardsDetails: { create: awardDetails },
           OrgTrainingDetails: { create: trainingDetails },
           OrgContactDetailsDto: {create:}
+          OrgCourseDetails:{ create: courseDetails},
         }
       })
     }
@@ -190,7 +201,37 @@ export class OrganisationService {
         }
       });
 
+    } else if(body.orgCourseDetails){
+      const courseDetails = body.orgCourseDetails.map((details)=>{
+        return {...details}
+      })
+
+      return this.prismaService.organisation.update({
+        where: {
+          id: parseInt(id),
+        },
+        data:{
+          OrgCourseDetails:{
+            update:{
+              where:{
+                id: courseDetails[0].id,
+              },
+              data:{
+                title: courseDetails[0].title,
+                affiliatedTo: courseDetails[0].affiliatedTo,
+              }
+            }
+          }
+        }
+
+      })
+
+
+
+
     }
+
+
   }
 
   public async getOrganisationDetails(
@@ -206,6 +247,7 @@ export class OrganisationService {
         OrgAwardsDetails: true,
         OrgTrainingDetails: true,
         OrgContactDetails:true,
+        OrgCourseDetails: true,
       },
     });
     if (!organisation) {
