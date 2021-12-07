@@ -33,7 +33,7 @@ export class OrgTrainingDetailsDto {
 }
 
 export class OrgContactDetailsDto{
-    id?: string
+    id?: string;
     emailId:   string;
     altEmailId:   string;
     contactNumber:   string;

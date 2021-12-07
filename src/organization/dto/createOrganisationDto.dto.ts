@@ -17,9 +17,9 @@ export class CreateOrganisationDto {
     @Type(() => OrgTrainingDetailsDto)
     orgTrainingDetails: OrgTrainingDetailsDto[];
 
-    @Type(() => OrgContactDetailsDto) 
-    orgContactDetails: OrgContactDetailsDto[];
-    
     @Type(() => OrgCourseDetailsDto)
     orgCourseDetails:OrgCourseDetailsDto[];
+
+    @Type(() => OrgContactDetailsDto) 
+    orgContactDetails: OrgContactDetailsDto;
 }
