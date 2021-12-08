@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
     try {
       console.log('inside guard');
       const res = await this.httpService
-        .get(`http://localhost:3000/auth/check`, {
+        .get(`http://localhost:3002/auth/check`, {
           headers: {
             'x-auth-token': req.headers['authorization']?.split(' ')[1],
           },
