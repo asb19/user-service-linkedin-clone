@@ -39,6 +39,7 @@ export class OrgContactDetailsDto{
     contactNumber:   string;
     altContactNum:   string;
     websiteUrl:      string;
+    
 
 }
 export class OrgCourseDetailsDto{
@@ -46,6 +47,7 @@ export class OrgCourseDetailsDto{
     title: string;
     affiliatedTo?: string;
     mediaUrls : string[];
+    statusCode?: number;
 
 
 }

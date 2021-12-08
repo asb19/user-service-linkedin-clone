@@ -219,7 +219,9 @@ export class OrganisationService {
 
     } else if(body.orgCourseDetails){
       const courseDetails = body.orgCourseDetails.map((details)=>{
-        return {...details}
+        return {...details,
+        statusCode: details.statusCode > 0 ? 1 : 0,
+        }
       })
 
       return this.prismaService.organisation.update({
@@ -235,6 +237,7 @@ export class OrganisationService {
               data:{
                 title: courseDetails[0].title,
                 affiliatedTo: courseDetails[0].affiliatedTo,
+                statusCode: courseDetails[0].statusCode,
               }
             }
           }
@@ -280,8 +283,15 @@ export class OrganisationService {
 
         OrgAwardsDetails: true,
         OrgTrainingDetails: true,
-        OrgCourseDetails: true,
+        OrgCourseDetails: {
+          where:{
+          statusCode : 1
+          }
+        },
         OrgContactDetails:true,
+          
+        
+          
       },
     });
     if (!organisation) {
