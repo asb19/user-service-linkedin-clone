@@ -23,13 +23,13 @@ export class OrganisationController {
     @Body() body: CreateOrganisationDto,
     @Param('id') id: string,
   ): Promise<Organisation> {
-    return await this.organisationService.editOrganisationDetails(body, id)
+    return await this.organisationService.editOrganisationDetails(body, parseInt(id))
   }
 
   @Get('/getorganisation/:id')
   private async getOrganisation(
     @Param('id') id: string,
   ): Promise<Organisation> {
-    return await this.organisationService.getOrganisationDetails(id);
+    return await this.organisationService.getOrganisationDetails(parseInt(id));
   }
 }
