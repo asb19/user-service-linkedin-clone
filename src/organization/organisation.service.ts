@@ -284,23 +284,17 @@ export class OrganisationService {
 
         OrgAwardsDetails: {
           where: {
-            statusCode: {
-              gt: 0,
-            }
+            statusCode: 1
           }
         },
         OrgTrainingDetails: {
           where: {
-            statusCode: {
-              gt: 0,
-            }
+            statusCode: 1
           }
         },
         OrgCourseDetails: {
           where: {
-            statusCode: {
-              gt: 0,
-            }
+            statusCode: 1
           }
         },
         OrgContactDetails: true,
