@@ -23,6 +23,7 @@ model User {
   emailVerified Boolean      @default(false)
   smsVerified   Boolean      @default(false)
   createdAt     DateTime     @default(now())
+  updatedAt     DateTime?
   UserProfile   UserProfile?
 
 }
@@ -39,6 +40,8 @@ model UserProfile {
   currentLocationId              Int?
   homeLocationId                 Int?
   preferredLocations             Int[]
+  createdAt                      DateTime                @default(now())
+  updatedAt                      DateTime?
   mediaUrls                      String[]
   currentLocation                City?                   @relation(fields: [currentLocationId], name: "CurrentLocation", references: [id])
   homeLocation                   City?                   @relation(fields: [homeLocationId], name: "HomeLocation", references: [id])
@@ -58,6 +61,8 @@ model UserEducation {
   mediaUrls       String[]
   statusId        Int           @default(1)
   instituteId     Int?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime?
   UserProfile     UserProfile   @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
   Institute       Organisation? @relation(fields: [instituteId], references: [id])
 }
@@ -67,6 +72,8 @@ model UserProfessionalDetail {
   userId      String           @unique
   description String?
   keySkills   String[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime?
   UserProfile UserProfile?     @relation(fields: [userId], references: [userId])
   Experiences UserExperience[]
 
@@ -85,6 +92,8 @@ model UserExperience {
   endTime                DateTime?              @db.Date
   mediaUrls              String[]
   isCurrent              Boolean
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
   Organisation           Organisation?          @relation(fields: [organisationId], references: [id])
   UserProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -95,6 +104,8 @@ model UserCertificateDetails {
   professionalId         String
   certificateName        String
   issuedBy               String
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
   licenceNumber          String
   issuedAt               DateTime?              @db.Date
   certificateURL         String
@@ -110,6 +121,8 @@ model UserAwardsDetails {
   issuedBy               String
   issuedDate             DateTime               @db.Date
   awardsDescription      String?
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
   mediaUrls              String[]
   userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
@@ -119,6 +132,8 @@ model UserTrainingDetails {
   professionalId         String
   title                  String
   organizer              String
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
   startDate              DateTime               @db.Date
   endDate                DateTime               @db.Date
   trainingDecs           String?
@@ -133,6 +148,8 @@ model Organisation {
   location           String?
   cityId             Int?
   zipcode            String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime?
   estaclishedDate    DateTime?            @db.Date
   logo               String?
   affiliation        String?
@@ -146,6 +163,7 @@ model Organisation {
   OrgTrainingDetails OrgTrainingDetails[]
   OrgCourseDetails   OrgCourseDetails[]
   OrgContactDetails  OrgContactDetails?
+  OrgEventDetails    OrgEventDetails[]
 }
 
 model OrgAwardsDetails {
@@ -156,6 +174,8 @@ model OrgAwardsDetails {
   issuedBy          String
   issuedDate        DateTime      @db.Date
   awardsDescription String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime?
   mediaUrls         String[]
   Organisation      Organisation? @relation(fields: [organisationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -170,6 +190,8 @@ model OrgTrainingDetails {
   startDate      DateTime      @db.Date
   endDate        DateTime      @db.Date
   trainingDecs   String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime?
   mediaUrls      String[]
   Organisation   Organisation? @relation(fields: [organisationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -180,7 +202,22 @@ model OrgCourseDetails {
   organisationId Int?
   title          String
   affiliatedTo   String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime?
   mediaUrls      String[]
+  statusCode     Int           @default(1)
+  Organisation   Organisation? @relation(fields: [organisationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model OrgEventDetails {
+  id             String        @id @default(cuid())
+  title          String
+  organisationId Int?
+  date           DateTime      @db.Date
+  desc           String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime?
+  eventUrl       String
   statusCode     Int           @default(1)
   Organisation   Organisation? @relation(fields: [organisationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
@@ -190,6 +227,8 @@ model OrgContactDetails {
   organisationId Int?          @unique
   emailId        String
   altEmailId     String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime?
   contactNumber  String
   altContactNum  String
   websiteUrl     String

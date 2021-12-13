@@ -44,6 +44,14 @@ export class OrgContactDetailsDto {
 
 
 }
+export class OrgEventDetailsDto {
+    id?: string;
+    title: string;
+    date: string;
+    eventUrl: string;
+    statusCode?: number;
+    desc: string;
+}
 export class OrgCourseDetailsDto {
     id?: string
     title: string;

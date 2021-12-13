@@ -5,6 +5,7 @@ import {
     OrgAwardsDetailsDto,
     OrgContactDetailsDto,
     OrgCourseDetailsDto,
+    OrgEventDetailsDto,
     OrgTrainingDetailsDto,
 } from './organisationOtherDetails.sto';
 export class CreateOrganisationDto {
@@ -18,8 +19,11 @@ export class CreateOrganisationDto {
     orgTrainingDetails: OrgTrainingDetailsDto[];
 
     @Type(() => OrgCourseDetailsDto)
-    orgCourseDetails:OrgCourseDetailsDto[];
+    orgCourseDetails: OrgCourseDetailsDto[];
 
-    @Type(() => OrgContactDetailsDto) 
+    @Type(() => OrgContactDetailsDto)
     orgContactDetails: OrgContactDetailsDto;
+
+    @Type(() => OrgEventDetailsDto)
+    orgEventDetails: OrgEventDetailsDto[];
 }
