@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import amqp from 'amqp-connection-manager';
 import { AppModule } from './app.module';
 
@@ -25,6 +26,16 @@ async function bootstrap() {
   // });
 
   // await app.startAllMicroservices();
+
+  const config = new DocumentBuilder()
+    .setTitle('User Service Api')
+    .setDescription('user service api doc')
+    .setVersion('1.0')
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document);
 
   //TODO: create queue service
   app.useGlobalPipes(new ValidationPipe());
