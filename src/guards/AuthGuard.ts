@@ -8,7 +8,7 @@ import {
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService) { }
 
   public async canActivate(context: ExecutionContext): Promise<any> {
     Logger.log('Auth Guard');
@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
     try {
       console.log('inside guard');
       const res = await this.httpService
-        .get(`http://3.110.207.83:3002/auth/check`, {
+        .get(`https://auth-dev.antino.ca/auth/check`, {
           headers: {
             'x-auth-token': req.headers['authorization']?.split(' ')[1],
           },

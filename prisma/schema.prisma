@@ -77,9 +77,17 @@ model UserProfessionalDetail {
   UserProfile UserProfile?     @relation(fields: [userId], references: [userId])
   Experiences UserExperience[]
 
-  UserCertificateDetails UserCertificateDetails[]
-  UserAwardsDetails      UserAwardsDetails[]
-  UserTrainingDetails    UserTrainingDetails[]
+  UserCertificateDetails         UserCertificateDetails[]
+  UserAwardsDetails              UserAwardsDetails[]
+  UserTrainingDetails            UserTrainingDetails[]
+  UserPublicationDetails         UserPublicationDetails[]
+  UserPatentDetails              UserPatentDetails[]
+  UserCurriculumDetails          UserCurriculumDetails?
+  UserScholarshipDetails         UserScholarshipDetails[]
+  UserGoogleCertificationDetails UserGoogleCertificationDetails[]
+  UserScopusDetails              UserScopusDetails[]
+  UserHindexDetails              UserHindexDetails[]
+  UserHobbies                    UserHobbies?
 }
 
 model UserExperience {
@@ -88,6 +96,7 @@ model UserExperience {
   designation            String
   organisationId         Int?
   industry               String
+  statusCode             Int                    @default(1)
   fromTime               DateTime?              @db.Date
   endTime                DateTime?              @db.Date
   mediaUrls              String[]
@@ -107,6 +116,7 @@ model UserCertificateDetails {
   createdAt              DateTime               @default(now())
   updatedAt              DateTime?
   licenceNumber          String
+  statusCode             Int                    @default(1)
   issuedAt               DateTime?              @db.Date
   certificateURL         String
   UserProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -121,6 +131,7 @@ model UserAwardsDetails {
   issuedBy               String
   issuedDate             DateTime               @db.Date
   awardsDescription      String?
+  statusCode             Int                    @default(1)
   createdAt              DateTime               @default(now())
   updatedAt              DateTime?
   mediaUrls              String[]
@@ -132,12 +143,114 @@ model UserTrainingDetails {
   professionalId         String
   title                  String
   organizer              String
+  statusCode             Int                    @default(1)
   createdAt              DateTime               @default(now())
   updatedAt              DateTime?
   startDate              DateTime               @db.Date
   endDate                DateTime               @db.Date
   trainingDecs           String?
   mediaUrls              String[]
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+}
+
+model UserPublicationDetails {
+  id                     String                 @id @default(cuid())
+  professionalId         String
+  title                  String
+  statusCode             Int                    @default(1)
+  publisher              String?
+  publishedAt            DateTime?              @db.Date
+  publicationUrl         String?
+  publicationDecs        String?
+  mediaUrls              String[]
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model UserPatentDetails {
+  id                     String                 @id @default(cuid())
+  professionalId         String
+  IPRTitle               String
+  statusCode             Int                    @default(1)
+  title                  String?
+  patentDecs             String?
+  validCountries         String[]
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model UserHobbies {
+  id                     String                 @id @default(cuid())
+  professionalId         String                 @unique
+  hobbies                String[]
+  mediaUrls              String[]
+  statusCode             Int                    @default(1)
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model UserCurriculumDetails {
+  id                     String                 @id @default(cuid())
+  professionalId         String                 @unique
+  activities             String[]
+  mediaUrls              String[]
+  statusCode             Int                    @default(1)
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model UserScholarshipDetails {
+  id                     Int                    @id @default(autoincrement())
+  professionalId         String
+  name                   String
+  scholarshipDecs        String?
+  amount                 String
+  issuedBy               String?
+  statusCode             Int                    @default(1)
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model UserGoogleCertificationDetails {
+  id                     String                 @id @default(cuid())
+  professionalId         String
+  title                  String
+  issuedAt               DateTime?              @db.Date
+  certificateURL         String?
+  statusCode             Int                    @default(1)
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+}
+
+model UserScopusDetails {
+  id                     Int                    @id @default(autoincrement())
+  professionalId         String
+  paperTitle             String
+  issuedAt               DateTime?              @db.Date
+  scopusUrl              String?
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
+  statusCode             Int                    @default(1)
+  userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model UserHindexDetails {
+  id                     Int                    @id @default(autoincrement())
+  professionalId         String
+  title                  String
+  issuedAt               DateTime?              @db.Date
+  indexUrl               String?
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime?
+  statusCode             Int                    @default(1)
   userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
 }

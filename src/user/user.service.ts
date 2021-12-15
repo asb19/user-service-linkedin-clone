@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { User } from '.prisma/client';
 import { HttpService } from '@nestjs/axios';
 import {
@@ -49,7 +48,7 @@ export class UserService {
   ): Promise<User> {
     //verify phone
     const verificationStatus = await this.httpService
-      .post(`http://localhost:3005/communications/verifyOtp`, {
+      .post(`https://comm-dev.antino.ca/communications/verifyOtp`, {
         to: body.contactNo,
         code: otp,
       })
@@ -82,7 +81,7 @@ export class UserService {
     otp: string,
   ): Promise<User> {
     const verificationStatus = await this.httpService
-      .post(`http://localhost:3005/communications/verifyOtp`, {
+      .post(`https://comm-dev.antino.ca/communications/verifyOtp`, {
         to: username,
         code: otp,
       })
