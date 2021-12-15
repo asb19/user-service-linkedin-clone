@@ -1,13 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Organisation } from '.prisma/client';
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
 import { GetOrganisation } from './dto/getOrganisationResponseDto.dto';
 import { OrganisationService } from './organisation.service';
 
 @ApiTags('Organisation')
 @Controller('organisation')
+@ApiBearerAuth('XYZ')
 export class OrganisationController {
   OrganisationService: any;
   public constructor(

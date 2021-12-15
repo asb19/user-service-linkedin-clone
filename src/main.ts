@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -31,7 +31,16 @@ async function bootstrap() {
     .setTitle('User Service Api')
     .setDescription('user service api doc')
     .setVersion('1.0')
-    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+      },
+      'XYZ',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -40,5 +49,6 @@ async function bootstrap() {
   //TODO: create queue service
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3001);
+  console.log('App is running at : ', await app.getUrl());
 }
 bootstrap();

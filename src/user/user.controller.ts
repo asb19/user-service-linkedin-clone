@@ -9,7 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import { UserByUserNameDto } from './dto/getUserByCred.dto';
@@ -60,9 +60,15 @@ export class UserController {
     };
   }
 
+  @ApiBearerAuth('XYZ')
   @UseGuards(AuthGuard)
   @Get('/greet')
   public async greet(): Promise<string> {
     return 'Greetings authenticated user';
+  }
+
+  @Get('/users')
+  public async users(): Promise<unknown> {
+    return this.userService.getUsers();
   }
 }
