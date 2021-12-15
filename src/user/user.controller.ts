@@ -9,11 +9,16 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/AuthGuard';
+import { CreateUserDto } from './dto/createUserDto.dto';
 import { UserByUserNameDto } from './dto/getUserByCred.dto';
-import { UpdateUserDto } from './dto/updateUserDto.dto';
+import { GetUser } from './dto/getUserResponse.dto';
+import { ResetPasswordDto } from './dto/resetPasswordDto.dto';
+import { RegisterQueryDto, UpdateUserDto } from './dto/updateUserDto.dto';
 import { UserService } from './user.service';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   public constructor(private readonly userService: UserService) {}
@@ -25,9 +30,7 @@ export class UserController {
   }
 
   @Post('/create')
-  public async CreateUser(
-    @Body() body: { email: string; Password: string },
-  ): Promise<User> {
+  public async CreateUser(@Body() body: CreateUserDto): Promise<User> {
     const user = await this.userService.createUser(body.email, body.Password);
     console.log(user);
     return user;
@@ -37,22 +40,24 @@ export class UserController {
   public async UpdateUser(
     @Body() body: UpdateUserDto,
     @Param('id') id: string,
-    @Query() query: { otp: string },
+    @Query() query: RegisterQueryDto,
   ): Promise<User> {
     const user = await this.userService.updateUser(id, body, query.otp);
     return user;
   }
 
   @Put('/resetPassword')
-  public async ResetPassword(
-    @Body() body: { username: string; Password: string; otp: string },
-  ): Promise<User> {
+  public async ResetPassword(@Body() body: ResetPasswordDto): Promise<GetUser> {
     const user = await this.userService.resetPassword(
       body.username,
       body.Password,
       body.otp,
     );
-    return user;
+    return {
+      status: true,
+      message: 'password updated successfully',
+      data: user,
+    };
   }
 
   @UseGuards(AuthGuard)
