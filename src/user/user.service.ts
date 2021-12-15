@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { User } from '.prisma/client';
 import { HttpService } from '@nestjs/axios';
 import {
@@ -14,7 +15,7 @@ export class UserService {
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly httpService: HttpService,
-  ) {}
+  ) { }
 
   public async findUser(username: string): Promise<User> {
     return await this.prismaService.user.findUnique({
@@ -61,14 +62,16 @@ export class UserService {
         id: userId,
       },
     });
-
     if (!findUser.emailVerified) throw new BadRequestException('Signup first');
 
     const user = await this.prismaService.user.update({
       where: {
         id: userId,
       },
-      data: body,
+      data: {
+        ...body,
+        updatedAt: new Date(),
+      },
     });
     return user;
   }

@@ -17,6 +17,7 @@ export class OrgAwardsDetailsDto {
     id?: string;
     title: string;
     issuedBy: string;
+    statusCode?: number;
     issuedDate: string;
     awardsDescription?: string;
     mediaUrls?: string[];
@@ -26,27 +27,36 @@ export class OrgTrainingDetailsDto {
     id?: string;
     title: string;
     organizer: string;
+    statusCode?: number;
     startDate: string;
     endDate: string;
     trainingDecs?: string;
     mediaUrls?: string[];
 }
 
-export class OrgContactDetailsDto{
+export class OrgContactDetailsDto {
     id?: string;
-    emailId:   string;
-    altEmailId:   string;
-    contactNumber:   string;
-    altContactNum:   string;
-    websiteUrl:      string;
-    
+    emailId: string;
+    altEmailId: string;
+    contactNumber: string;
+    altContactNum: string;
+    websiteUrl: string;
+
 
 }
-export class OrgCourseDetailsDto{
+export class OrgEventDetailsDto {
+    id?: string;
+    title: string;
+    date: string;
+    eventUrl: string;
+    statusCode?: number;
+    desc: string;
+}
+export class OrgCourseDetailsDto {
     id?: string
     title: string;
     affiliatedTo?: string;
-    mediaUrls : string[];
+    mediaUrls: string[];
     statusCode?: number;
 
 

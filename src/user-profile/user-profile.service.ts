@@ -1,12 +1,13 @@
+/* eslint-disable prettier/prettier */
 import { UserProfile } from '.prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import exp from 'constants';
+// import exp from 'constants';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserProfileDto } from './dto/createUserProfileDto.dto';
 
 @Injectable()
 export class UserProfileService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) { }
 
   public async createProfile(
     body: CreateUserProfileDto,
@@ -15,68 +16,68 @@ export class UserProfileService {
     const eduDetails =
       body.userEducationDetails && body.userEducationDetails.length > 0
         ? body.userEducationDetails.map((detail) => {
-            const insId = detail.instituteId;
-            delete detail.instituteId;
-            return {
-              ...detail,
-              fromTime: new Date(detail.fromTime),
-              endTime: new Date(detail.endTime),
-              Institute: insId
-                ? { connect: { id: insId } }
-                : {
-                    create: detail.Institute,
-                  },
-            };
-          })
+          const insId = detail.instituteId;
+          delete detail.instituteId;
+          return {
+            ...detail,
+            fromTime: new Date(detail.fromTime),
+            endTime: new Date(detail.endTime),
+            Institute: insId
+              ? { connect: { id: insId } }
+              : {
+                create: detail.Institute,
+              },
+          };
+        })
         : undefined;
 
     const experienceDetails =
       body.userExperienceDetails && body.userExperienceDetails.length > 0
         ? body.userExperienceDetails.map((detail) => {
-            const oId = detail.organisationId;
-            delete detail.organisationId;
-            return {
-              ...detail,
-              fromTime: new Date(detail.fromTime),
-              endTime: new Date(detail.endTime),
-              Organisation: !oId
-                ? {
-                    create: detail.Organisation,
-                  }
-                : { connect: { id: oId } },
-            };
-          })
+          const oId = detail.organisationId;
+          delete detail.organisationId;
+          return {
+            ...detail,
+            fromTime: new Date(detail.fromTime),
+            endTime: new Date(detail.endTime),
+            Organisation: !oId
+              ? {
+                create: detail.Organisation,
+              }
+              : { connect: { id: oId } },
+          };
+        })
         : undefined;
     //took certificate details  object from body............
     const certDetails =
       body.userCertificateDetails && body.userCertificateDetails.length > 0
         ? body.userCertificateDetails.map((detail) => {
-            return {
-              ...detail,
-              issuedAt: new Date(detail.issuedAt),
-            };
-          })
+          return {
+            ...detail,
+            issuedAt: new Date(detail.issuedAt),
+          };
+        })
         : undefined;
     //took award details object from body./..........
     const awardDetails =
       body.userAwardsDetails && body.userAwardsDetails.length > 0
         ? body.userAwardsDetails.map((detail) => {
-            return {
-              ...detail,
-              issuedDate: new Date(detail.issuedDate),
-            };
-          })
+          return {
+            ...detail,
+            issuedDate: new Date(detail.issuedDate),
+          };
+        })
         : undefined;
     //took tarining object from body....
     const trainingDetails =
       body.userTraingDetails && body.userTraingDetails.length > 0
         ? body.userTraingDetails.map((detail) => {
-            return {
-              ...detail,
-              startDate: new Date(detail.startDate), //change type string -> date
-              endDate: new Date(detail.endDate),
-            };
-          })
+          return {
+            ...detail,
+            startDate: new Date(detail.startDate), //change type string -> date
+            endDate: new Date(detail.endDate),
+          };
+        })
         : undefined;
 
     const user = await this.prismaService.userProfile.findUnique({
@@ -137,27 +138,27 @@ export class UserProfileService {
         UserProfessionalDetail: body.userProfessionalDetails
           ? body.userProfessionalDetails.id
             ? //if professionalDetails id is given
-              {
-                update: {
-                  Experiences: { create: experienceDetails },
+            {
+              update: {
+                Experiences: { create: experienceDetails },
 
-                  UserCertificateDetails: { create: certDetails },
-                  UserAwardsDetails: { create: awardDetails },
-                  UserTrainingDetails: { create: trainingDetails },
-                },
-              }
+                UserCertificateDetails: { create: certDetails },
+                UserAwardsDetails: { create: awardDetails },
+                UserTrainingDetails: { create: trainingDetails },
+              },
+            }
             : //if professionalDetails id is null
-              {
-                create: {
-                  description: body.userProfessionalDetails.description,
-                  keySkills: body.userProfessionalDetails.keySkills,
+            {
+              create: {
+                description: body.userProfessionalDetails.description,
+                keySkills: body.userProfessionalDetails.keySkills,
 
-                  Experiences: { create: experienceDetails },
-                  UserCertificateDetails: { create: certDetails },
-                  UserAwardsDetails: { create: awardDetails },
-                  UserTrainingDetails: { create: trainingDetails },
-                },
-              }
+                Experiences: { create: experienceDetails },
+                UserCertificateDetails: { create: certDetails },
+                UserAwardsDetails: { create: awardDetails },
+                UserTrainingDetails: { create: trainingDetails },
+              },
+            }
           : undefined,
       },
     });
@@ -200,6 +201,7 @@ export class UserProfileService {
                 endTime: eduDetails[0].endTime,
                 field: eduDetails[0].field,
                 fromTime: eduDetails[0].fromTime,
+                updatedAt: new Date(),
 
                 Institute: {
                   create: eduDetails[0].Institute || undefined,
@@ -234,9 +236,10 @@ export class UserProfileService {
               : undefined,
           preferredLocations:
             body.userProfileDetails &&
-            body.userProfileDetails.preferredLocations
+              body.userProfileDetails.preferredLocations
               ? body.userProfileDetails.preferredLocations
               : undefined,
+          updatedAt: new Date(),
         },
       });
     } else if (body.userProfessionalDetails && !body.userExperienceDetails) {
@@ -249,6 +252,7 @@ export class UserProfileService {
             update: {
               description: body.userProfessionalDetails.description,
               keySkills: body.userProfessionalDetails.keySkills,
+              updatedAt: new Date(),
             },
           },
         },
@@ -261,7 +265,6 @@ export class UserProfileService {
           endTime: new Date(detail.endTime),
         };
       });
-
       return this.prismaService.userProfile.update({
         where: {
           userId,
@@ -281,6 +284,7 @@ export class UserProfileService {
                     industry: expDetails[0].industry,
                     mediaUrls: expDetails[0].mediaUrls,
                     isCurrent: expDetails[0].isCurrent,
+                    updatedAt: new Date(),
                     Organisation: {
                       create: expDetails[0].Organisation || undefined,
                     },
@@ -317,6 +321,7 @@ export class UserProfileService {
                     licenceNumber: certificateDetails[0].licenceNumber,
                     issuedAt: certificateDetails[0].issuedAt,
                     certificateURL: certificateDetails[0].certificateURL,
+                    updatedAt: new Date(),
                   },
                 },
               },
@@ -352,6 +357,7 @@ export class UserProfileService {
                     awardsDescription: awardDet[0].awardsDescription
                       ? awardDet[0].awardsDescription
                       : undefined,
+                    updatedAt: new Date(),
                   },
                 },
               },
@@ -367,6 +373,7 @@ export class UserProfileService {
           startDate: new Date(detail.startDate),
         };
       });
+
 
       return this.prismaService.userProfile.update({
         where: {
@@ -388,6 +395,7 @@ export class UserProfileService {
                     trainingDecs: trainingDet[0].trainingDecs
                       ? trainingDet[0].trainingDecs
                       : undefined,
+                    updatedAt: new Date(),
                   },
                 },
               },
