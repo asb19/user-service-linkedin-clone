@@ -19,7 +19,7 @@ export class OrganisationController {
   private async createOrganisation(
     @Body() body: CreateOrganisationDto,
   ): Promise<GetOrganisation> {
-    const organisation =  await this.organisationService.createOrganisation(body);
+    const organisation = await this.organisationService.createOrganisation(body);
     return {
       status: true,
       message: "organisation created successfully",
@@ -32,7 +32,7 @@ export class OrganisationController {
     @Body() body: CreateOrganisationDto,
     @Param('id') id: string,
   ): Promise<GetOrganisation> {
-    const organisation =  await this.organisationService.editOrganisationDetails(body, id)
+    const organisation = await this.organisationService.editOrganisationDetails(body, parseInt(id))
     return {
       status: true,
       message: "organisation updated successfully",
@@ -44,7 +44,7 @@ export class OrganisationController {
   private async getOrganisation(
     @Param('id') id: string,
   ): Promise<GetOrganisation> {
-    const organisationDetails =  await this.organisationService.getOrganisationDetails(id);
+    const organisationDetails = await this.organisationService.getOrganisationDetails(parseInt(id));
     return {
       status: true,
       message: "got organisation details successfully",
