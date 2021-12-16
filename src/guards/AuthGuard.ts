@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly httpService: HttpService,
     private readonly configurationService: ConfigurationService,
-  ) { }
+  ) {}
 
   public async canActivate(context: ExecutionContext): Promise<any> {
     Logger.log('Auth Guard');
