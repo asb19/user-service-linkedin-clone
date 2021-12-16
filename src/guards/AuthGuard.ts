@@ -5,10 +5,14 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
+import { ConfigurationService } from 'src/configuration/configuration.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly httpService: HttpService) { }
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configurationService: ConfigurationService,
+  ) { }
 
   public async canActivate(context: ExecutionContext): Promise<any> {
     Logger.log('Auth Guard');
@@ -16,8 +20,9 @@ export class AuthGuard implements CanActivate {
 
     try {
       console.log('inside guard');
+      console.log(this.configurationService.authUrl);
       const res = await this.httpService
-        .get(`https://auth-dev.antino.ca/auth/check`, {
+        .get(`${this.configurationService.authUrl}auth/check`, {
           headers: {
             'x-auth-token': req.headers['authorization']?.split(' ')[1],
           },

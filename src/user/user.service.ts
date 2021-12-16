@@ -109,4 +109,17 @@ export class UserService {
       },
     });
   }
+
+  public async getUsers() {
+    const loc = [];
+    const med = ['zxc', 'abc'];
+    const filters = {
+      where: {
+        preferredLocations: loc.length > 0 ? { hasSome: loc } : undefined,
+        mediaUrls: med.length > 0 ? { hasSome: med } : undefined,
+      },
+    };
+
+    return await this.prismaService.userProfile.findMany(filters);
+  }
 }

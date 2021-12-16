@@ -1,7 +1,9 @@
-import { GENDER } from '.prisma/client';
+import { City, GENDER } from '.prisma/client';
+import { ApiBody, ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
 export class UserEducationDetailsDto {
+  @ApiProperty()
   public instituteId?: number;
   public id?: string;
   public degreeOrDiploma: string;
@@ -14,7 +16,8 @@ export class UserEducationDetailsDto {
 }
 
 export class OrganisationDetailsDto {
-  [x: string]: any;
+  @ApiProperty()
+  public id?: number;
   public fullName: string;
   public location?: string;
   public cityId: number;
@@ -25,7 +28,7 @@ export class OrganisationDetailsDto {
   public description?: string;
   public isInstitute: boolean;
   public isVerified: boolean;
-  public type: string;
+  public type?: string;
 }
 
 export class UserProfessionalDetailsDto {
@@ -53,6 +56,7 @@ export class UserProfileDto {
   @IsNotEmpty()
   dob: string;
 
+  @ApiProperty({ enum: GENDER })
   @IsNotEmpty()
   gender?: GENDER;
 

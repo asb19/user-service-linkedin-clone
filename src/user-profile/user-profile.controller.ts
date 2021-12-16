@@ -8,11 +8,15 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateUserProfileDto } from './dto/createUserProfileDto.dto';
+import { GetUserProfile } from './dto/getUserProfileResponse.dto';
 import { UserProfileService } from './user-profile.service';
 
+@ApiTags('UserProfile')
 @Controller('userprofile')
+@ApiBearerAuth('XYZ')
 export class UserProfileController {
   public constructor(private readonly userProfileService: UserProfileService) {}
 
@@ -21,8 +25,16 @@ export class UserProfileController {
   private async CreateProfile(
     @Body() body: CreateUserProfileDto,
     @Req() req,
-  ): Promise<UserProfile> {
-    return await this.userProfileService.createProfile(body, req.user.id);
+  ): Promise<GetUserProfile> {
+    const userProfile = await this.userProfileService.createProfile(
+      body,
+      req.user.id,
+    );
+    return {
+      status: true,
+      message: 'created user profile details',
+      data: userProfile,
+    };
   }
 
   @UseGuards(AuthGuard)
@@ -30,13 +42,28 @@ export class UserProfileController {
   private async EditProfile(
     @Body() body: CreateUserProfileDto,
     @Req() req,
-  ): Promise<UserProfile> {
-    return await this.userProfileService.editProfileDetails(body, req.user.id);
+  ): Promise<GetUserProfile> {
+    const userProfile = await this.userProfileService.editProfileDetails(
+      body,
+      req.user.id,
+    );
+    return {
+      status: true,
+      message: 'user profile successfully updated',
+      data: userProfile,
+    };
   }
 
   @UseGuards(AuthGuard)
   @Get('/getProfileDetails')
-  private async GetDetails(@Req() req): Promise<UserProfile> {
-    return await this.userProfileService.getProfileDetails(req.user.id);
+  private async GetDetails(@Req() req): Promise<GetUserProfile> {
+    const userProfile = await this.userProfileService.getProfileDetails(
+      req.user.id,
+    );
+    return {
+      status: true,
+      message: 'got profile data',
+      data: userProfile,
+    };
   }
 }
