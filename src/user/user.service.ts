@@ -1,9 +1,12 @@
 import { User } from '.prisma/client';
 import { HttpService } from '@nestjs/axios';
 import {
+  BadGatewayException,
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { generateHash } from 'src/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -16,7 +19,7 @@ export class UserService {
     private readonly prismaService: PrismaService,
     private readonly httpService: HttpService,
     private readonly configrationService: ConfigurationService,
-  ) { }
+  ) {}
 
   public async findUser(username: string): Promise<User> {
     return await this.prismaService.user.findUnique({
@@ -49,32 +52,40 @@ export class UserService {
     otp: string,
   ): Promise<User> {
     //verify phone
-    const verificationStatus = await this.httpService
-      .post(`${this.configrationService.commUrl}communications/verifyOtp`, {
-        to: body.contactNo,
-        code: otp,
-      })
-      .toPromise()
-      .then((data) => data.data);
-    if (!verificationStatus)
-      throw new BadRequestException('verification failed');
-    const findUser = await this.prismaService.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-    if (!findUser.emailVerified) throw new BadRequestException('Signup first');
+    try {
+      const verificationStatus = await this.httpService
+        .post(`${this.configrationService.commUrl}communications/verifyOtp`, {
+          to: body.contactNo,
+          code: otp,
+        })
+        .toPromise()
+        .then((data) => data.data);
+      console.log(verificationStatus);
+      if (!verificationStatus)
+        throw new BadRequestException('verification failed');
+      const findUser = await this.prismaService.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+      if (!findUser.emailVerified)
+        throw new BadRequestException('Signup first');
 
-    const user = await this.prismaService.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        ...body,
-        updatedAt: new Date(),
-      },
-    });
-    return user;
+      const user = await this.prismaService.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          ...body,
+          updatedAt: new Date(),
+        },
+      });
+      return user;
+    } catch (err) {
+      if (err instanceof BadRequestException)
+        throw new BadRequestException(err.getResponse());
+      throw new BadGatewayException('communication service might be down');
+    }
   }
 
   public async resetPassword(
@@ -82,34 +93,42 @@ export class UserService {
     Password: string,
     otp: string,
   ): Promise<User> {
-    const verificationStatus = await this.httpService
-      .post(`${this.configrationService.commUrl}communications/verifyOtp`, {
-        to: username,
-        code: otp,
-      })
-      .toPromise()
-      .then((data) => data.data);
-    if (!verificationStatus)
-      throw new BadRequestException('verification failed');
+    try {
+      const verificationStatus = await this.httpService
+        .post(`${this.configrationService.commUrl}communications/verifyOtp`, {
+          to: username,
+          code: otp,
+        })
+        .toPromise()
+        .then((data) => data.data);
+      if (!verificationStatus) throw new BadRequestException('wrong otp');
 
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        email: username,
-      },
-    });
-    if (!user)
-      throw new NotFoundException(
-        'User with this email not found, signup first!',
-      );
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          email: username,
+        },
+      });
+      if (!user)
+        throw new NotFoundException(
+          'User with this email not found, signup first!',
+        );
 
-    return await this.prismaService.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        Password: await generateHash(Password),
-      },
-    });
+      return await this.prismaService.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          Password: await generateHash(Password),
+        },
+      });
+    } catch (err) {
+      if (
+        err instanceof BadRequestException ||
+        err instanceof NotFoundException
+      )
+        throw err;
+      throw new BadGatewayException('communication service might be down');
+    }
   }
 
   public async getUsers() {
