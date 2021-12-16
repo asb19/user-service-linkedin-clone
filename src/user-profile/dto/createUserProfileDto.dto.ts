@@ -8,6 +8,14 @@ import {
   UserCertificateDetailsDto,
   UserAwardsDetailsDto,
   UserTrainingDetailsDto,
+  UserPublicationDetailsDto,
+  UserPatentDetailsDto,
+  UserHobbiesDto,
+  UserCurriculumDetailsDto,
+  UserScholarshipDetailsDto,
+  UserGoogleCertificationDetailsDto,
+  UserScopusDetailsDto,
+  UserHindexDetailsDto,
 } from './userOtherDetails.dto';
 
 export class CreateUserProfileDto {
@@ -31,5 +39,29 @@ export class CreateUserProfileDto {
   userAwardsDetails: UserAwardsDetailsDto[];
 
   @Type(() => UserTrainingDetailsDto)
-  userTraingDetails: UserTrainingDetailsDto[];
+  userTrainingDetails: UserTrainingDetailsDto[];
+
+  @Type(() => UserPublicationDetailsDto)
+  userPublicationDetails: UserPublicationDetailsDto[];
+
+  @Type(() => UserPatentDetailsDto)
+  userPatentDetails: UserPatentDetailsDto[];
+
+  @Type(() => UserHobbiesDto)
+  userHobbies: UserHobbiesDto;
+
+  @Type(() => UserCurriculumDetailsDto)
+  userCurriculumDetails: UserCurriculumDetailsDto;
+
+  @Type(() => UserScholarshipDetailsDto)
+  userScholarshipDetails: UserScholarshipDetailsDto[];
+
+  @Type(() => UserGoogleCertificationDetailsDto)
+  userGoogleCertificationDetails: UserGoogleCertificationDetailsDto[];
+
+  @Type(() => UserScopusDetailsDto)
+  userScopusDetails: UserScopusDetailsDto[];
+
+  @Type(() => UserHindexDetailsDto)
+  userHindexDetails: UserHindexDetailsDto[];
 }

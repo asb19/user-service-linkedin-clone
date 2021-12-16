@@ -46,6 +46,7 @@ export class UserExperienceDetailsDto {
   fromTime?: string;
   endTime?: string;
   mediaUrls?: string[];
+  statusCode?: number;
   isCurrent: boolean;
   Organisation?: OrganisationDetailsDto;
 }
@@ -72,6 +73,7 @@ export class UserCertificateDetailsDto {
   issuedBy: string;
   licenceNumber: string;
   issuedAt?: string;
+  statusCode?: number;
   certificateURL: string;
 }
 
@@ -81,6 +83,7 @@ export class UserAwardsDetailsDto {
   issuedBy: string;
   issuedDate: string;
   awardsDescription?: string;
+  statusCode?: number;
   mediaUrls?: string[];
 }
 
@@ -91,5 +94,75 @@ export class UserTrainingDetailsDto {
   startDate: string;
   endDate: string;
   trainingDecs?: string;
+  statusCode?: number;
   mediaUrls?: string[];
+}
+
+export class UserPublicationDetailsDto {
+  id?: string;
+  title: string;
+  publisher?: string;
+  publishedAt?: string;
+  publicationUrl?: string;
+  publicationDecs?: string;
+  statusCode?: number;
+  mediaUrls?: string[];
+}
+
+export class UserPatentDetailsDto {
+  id?: string;
+  IPRTitle: string;
+  title?: string;
+  patentDecs?: string;
+  statusCode?: number;
+  validCountries: string[];
+}
+
+export class UserHobbiesDto {
+  id?: string;
+  hobbies: string[];
+  mediaUrls: string[];
+  statusCode?: number;
+}
+
+export class UserCurriculumDetailsDto {
+  id?: string;
+  activities: string[];
+  mediaUrls: string[];
+  statusCode?: number;
+}
+
+export class UserScholarshipDetailsDto {
+  id?: number;
+  name: string;
+  scholarshipDecs?: string;
+  amount: string;
+  statusCode?: number;
+  issuedBy: string;
+}
+
+export class UserGoogleCertificationDetailsDto {
+  id?: string;
+  title: string;
+  issuedAt?: string;
+  certificateURL?: string;
+  statusCode?: number;
+
+}
+
+export class UserScopusDetailsDto {
+  id?: number;
+  paperTitle: string;
+  issuedAt?: string;
+  statusCode?: number;
+  scopusUrl?: string;
+}
+
+export class UserHindexDetailsDto {
+  id?: number;
+  title: string;
+  issuedAt?: string;
+  indexUrl?: string;
+  statusCode?: number;
+
 }
