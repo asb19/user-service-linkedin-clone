@@ -8,12 +8,14 @@ import {
 import { generateHash } from 'src/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/updateUserDto.dto';
+import { ConfigurationService } from 'src/configuration/configuration.service';
 
 @Injectable()
 export class UserService {
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly httpService: HttpService,
+    private readonly configrationService: ConfigurationService,
   ) { }
 
   public async findUser(username: string): Promise<User> {
@@ -48,7 +50,7 @@ export class UserService {
   ): Promise<User> {
     //verify phone
     const verificationStatus = await this.httpService
-      .post(`https://comm-dev.antino.ca/communications/verifyOtp`, {
+      .post(`${this.configrationService.commUrl}communications/verifyOtp`, {
         to: body.contactNo,
         code: otp,
       })
@@ -81,7 +83,7 @@ export class UserService {
     otp: string,
   ): Promise<User> {
     const verificationStatus = await this.httpService
-      .post(`https://comm-dev.antino.ca/communications/verifyOtp`, {
+      .post(`${this.configrationService.commUrl}communications/verifyOtp`, {
         to: username,
         code: otp,
       })
