@@ -6,7 +6,7 @@ import amqp from 'amqp-connection-manager';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   // const user = 'admin';
   // const password = 'admin';
