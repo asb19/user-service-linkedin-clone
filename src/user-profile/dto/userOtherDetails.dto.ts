@@ -65,6 +65,8 @@ export class UserProfileDto {
   currentLocationId?: number;
   homeLocationId?: number;
   preferredLocations?: number[];
+  passportPlaceAndCountryOfIssue?: string;
+  passportValidity?: string;
 }
 
 export class UserCertificateDetailsDto {
@@ -147,7 +149,6 @@ export class UserGoogleCertificationDetailsDto {
   issuedAt?: string;
   certificateURL?: string;
   statusCode?: number;
-
 }
 
 export class UserScopusDetailsDto {
@@ -164,5 +165,4 @@ export class UserHindexDetailsDto {
   issuedAt?: string;
   indexUrl?: string;
   statusCode?: number;
-
 }
