@@ -195,6 +195,31 @@ export class UserProfileService {
           body.userProfileDetails && body.userProfileDetails.preferredLocations
             ? body.userProfileDetails.preferredLocations
             : undefined,
+        homeLocationId:
+          body.userProfileDetails && body.userProfileDetails.homeLocationId
+            ? body.userProfileDetails.homeLocationId
+            : undefined,
+        adhaarNo:
+          body.userProfileDetails && body.userProfileDetails.adhaarNo
+            ? body.userProfileDetails.adhaarNo
+            : undefined,
+        photoUrl:
+          body.userProfileDetails && body.userProfileDetails.photoUrl
+            ? body.userProfileDetails.photoUrl
+            : undefined,
+        passportNo:
+          body.userProfileDetails && body.userProfileDetails.passportNo
+            ? body.userProfileDetails.passportNo
+            : undefined,
+        passportPlaceAndCountryOfIssue:
+          body.userProfileDetails &&
+          body.userProfileDetails.passportPlaceAndCountryOfIssue
+            ? body.userProfileDetails.passportPlaceAndCountryOfIssue
+            : undefined,
+        passportValidity:
+          body.userProfileDetails && body.userProfileDetails.passportValidity
+            ? new Date(body.userProfileDetails.passportValidity)
+            : undefined,
         UserEducation: {
           create: eduDetails,
         },

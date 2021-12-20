@@ -66,9 +66,4 @@ export class UserController {
   public async greet(): Promise<string> {
     return 'Greetings authenticated user';
   }
-
-  @Get('/users')
-  public async users(): Promise<unknown> {
-    return this.userService.getUsers();
-  }
 }

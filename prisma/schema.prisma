@@ -32,7 +32,7 @@ model UserProfile {
   userId                         String                  @id
   photoUrl                       String?
   dob                            DateTime?               @db.Date
-  gender                         GENDER
+  gender                         GENDER?
   adhaarNo                       String?
   passportNo                     String?
   passportValidity               DateTime?               @db.Date
