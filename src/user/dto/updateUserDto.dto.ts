@@ -1,6 +1,6 @@
 import { USER_TYPE } from '.prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class UpdateUserDto {
   @ApiProperty()
@@ -23,6 +23,10 @@ export class UpdateUserDto {
   @IsString({ message: 'please input primary contact no' })
   @IsNotEmpty()
   public contactNo: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  public smsVerified: boolean;
 }
 
 export class RegisterQueryDto {

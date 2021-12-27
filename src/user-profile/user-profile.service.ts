@@ -265,6 +265,11 @@ export class UserProfileService {
               }
           : undefined,
       },
+      include: {
+        UserProfessionalDetail: {
+          select: { id: true },
+        },
+      },
     });
   }
 
