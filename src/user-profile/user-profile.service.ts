@@ -788,7 +788,11 @@ export class UserProfileService {
         homeLocation: true,
         UserProfessionalDetail: {
           include: {
-            Experiences: true,
+            Experiences: {
+              where: {
+                statusCode: 1,
+              },
+            },
             UserCertificateDetails: {
               where: {
                 statusCode: 1,
