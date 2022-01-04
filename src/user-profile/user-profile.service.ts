@@ -393,7 +393,7 @@ export class UserProfileService {
                     industry: expDetails[0].industry || undefined,
                     mediaUrls: expDetails[0].mediaUrls || undefined,
                     isCurrent: expDetails[0].isCurrent || undefined,
-                    statusCode: expDetails[0].statusCode || undefined,
+                    statusCode: expDetails[0].statusCode == 0 ? 0 : undefined,
                     updatedAt: new Date(),
                     Organisation: {
                       create: expDetails[0].Organisation || undefined,
