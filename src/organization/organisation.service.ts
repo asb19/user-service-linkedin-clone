@@ -6,61 +6,55 @@ import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
 
 @Injectable()
 export class OrganisationService {
-  public constructor(private readonly prismaService: PrismaService) { }
+  public constructor(private readonly prismaService: PrismaService) {}
 
   public async createOrganisation(
     body: CreateOrganisationDto,
   ): Promise<Organisation> {
-
     const awardDetails =
       body.orgAwardsDetails && body.orgAwardsDetails.length > 0
         ? body.orgAwardsDetails.map((detail) => {
-          return {
-            ...detail,
-            issuedDate: new Date(detail.issuedDate),
-          };
-        })
+            return {
+              ...detail,
+              issuedDate: new Date(detail.issuedDate),
+            };
+          })
         : undefined;
 
     const courseDetails =
       body.orgCourseDetails && body.orgCourseDetails.length > 0
         ? body.orgCourseDetails.map((details) => {
-          return {
-            ...details
-          }
-        })
-        : undefined
-
+            return {
+              ...details,
+            };
+          })
+        : undefined;
 
     const eventDetails =
       body.orgEventDetails && body.orgEventDetails.length > 0
         ? body.orgEventDetails.map((detail) => {
-          return {
-            ...detail,
-            date: new Date(detail.date),
-          }
-
-        })
-        : undefined
+            return {
+              ...detail,
+              date: new Date(detail.date),
+            };
+          })
+        : undefined;
 
     //took tarining object from body....
     const trainingDetails =
       body.orgTrainingDetails && body.orgTrainingDetails.length > 0
         ? body.orgTrainingDetails.map((detail) => {
-          return {
-            ...detail,
-            startDate: new Date(detail.startDate), //change type string -> date
-            endDate: new Date(detail.endDate),
-          };
-        })
+            return {
+              ...detail,
+              startDate: new Date(detail.startDate), //change type string -> date
+              endDate: new Date(detail.endDate),
+            };
+          })
         : undefined;
 
-    const contactDetails =
-      body.orgContactDetails
-        ? { ...body.orgContactDetails }
-        : undefined
-
-
+    const contactDetails = body.orgContactDetails
+      ? { ...body.orgContactDetails }
+      : undefined;
 
     if (!body.organisationDetails.id) {
       const {
@@ -95,9 +89,6 @@ export class OrganisationService {
       const organisation = await this.prismaService.organisation.create({
         data: {
           ...data,
-
-
-
         },
       });
       return organisation;
@@ -105,7 +96,7 @@ export class OrganisationService {
 
     return this.prismaService.organisation.update({
       where: {
-        id: body.organisationDetails.id
+        id: body.organisationDetails.id,
       },
       data: {
         OrgAwardsDetails: { create: awardDetails },
@@ -115,16 +106,13 @@ export class OrganisationService {
         OrgEventDetails: { create: eventDetails },
 
         //OrgContactDetails:{ create: contactDetails},
-
-      }
-    })
-
-
+      },
+    });
   }
 
   public async editOrganisationDetails(
     body: CreateOrganisationDto,
-    id: number
+    id: number,
   ): Promise<Organisation> {
     const organisation = await this.prismaService.organisation.findUnique({
       where: { id },
@@ -144,7 +132,6 @@ export class OrganisationService {
         logo,
 
         estaclishedDate,
-
       } = body.organisationDetails;
       return this.prismaService.organisation.update({
         where: {
@@ -159,9 +146,8 @@ export class OrganisationService {
           logo,
 
           estaclishedDate,
-          updatedAt: new Date()
-
-        }
+          updatedAt: new Date(),
+        },
       });
     } else if (body.orgAwardsDetails) {
       //TODO : edit award details
@@ -193,8 +179,8 @@ export class OrganisationService {
                 updatedAt: new Date(),
               },
             },
-          }
-        }
+          },
+        },
       });
     } else if (body.orgTrainingDetails) {
       const trainingDet = body.orgTrainingDetails.map((detail) => {
@@ -227,15 +213,14 @@ export class OrganisationService {
               },
             },
           },
-        }
+        },
       });
-
     } else if (body.orgCourseDetails) {
       const courseDetails = body.orgCourseDetails.map((details) => {
         return {
           ...details,
-        }
-      })
+        };
+      });
 
       return this.prismaService.organisation.update({
         where: {
@@ -252,14 +237,13 @@ export class OrganisationService {
                 affiliatedTo: courseDetails[0].affiliatedTo,
                 statusCode: courseDetails[0].statusCode,
                 updatedAt: new Date(),
-              }
-            }
-          }
-        }
-
-      })
+              },
+            },
+          },
+        },
+      });
     } else if (body.orgContactDetails) {
-      const contactDetails = { ...body.orgContactDetails }
+      const contactDetails = { ...body.orgContactDetails };
 
       return this.prismaService.organisation.update({
         where: {
@@ -268,35 +252,32 @@ export class OrganisationService {
         data: {
           OrgContactDetails: {
             update: {
-
-
               emailId: contactDetails.emailId,
               altEmailId: contactDetails.altEmailId,
               contactNumber: contactDetails.contactNumber,
               altContactNum: contactDetails.altContactNum,
               websiteUrl: contactDetails.websiteUrl,
               updatedAt: new Date(),
-            }
-
-          }
-        }
-      })
+            },
+          },
+        },
+      });
     } else if (body.orgEventDetails) {
       const eventDetails = body.orgEventDetails.map((detail) => {
         return {
           ...detail,
           date: new Date(detail.date),
-        }
+        };
       });
       return this.prismaService.organisation.update({
         where: {
-          id
+          id,
         },
         data: {
           OrgEventDetails: {
             update: {
               where: {
-                id: eventDetails[0].id
+                id: eventDetails[0].id,
               },
               data: {
                 title: eventDetails[0].title,
@@ -305,57 +286,60 @@ export class OrganisationService {
                 date: eventDetails[0].date,
                 statusCode: eventDetails[0].statusCode,
                 updatedAt: new Date(),
-              }
-            }
-          }
-        }
-      })
+              },
+            },
+          },
+        },
+      });
     }
-
-
   }
 
-  public async getOrganisationDetails(
-    id: number
-  ): Promise<Organisation> {
+  public async getOrganisationDetails(id: number): Promise<Organisation> {
     const organisation = await this.prismaService.organisation.findUnique({
       where: {
-        id
+        id,
       },
       include: {
-
-
         OrgAwardsDetails: {
           where: {
-            statusCode: 1
-          }
+            statusCode: 1,
+          },
         },
         OrgTrainingDetails: {
           where: {
-            statusCode: 1
-          }
+            statusCode: 1,
+          },
         },
         OrgCourseDetails: {
           where: {
-            statusCode: 1
-          }
+            statusCode: 1,
+          },
         },
         OrgEventDetails: {
           where: {
-            statusCode: 1
-          }
+            statusCode: 1,
+          },
         },
         OrgContactDetails: true,
-
-
-
       },
     });
     if (!organisation) {
       throw new NotFoundException('Organisation not found');
-
     }
     return organisation;
   }
 
+  public async getOrganisations(): Promise<Organisation[]> {
+    const organisations = this.prismaService.organisation.findMany({
+      include: {
+        City: {
+          select: {
+            fullName: true,
+          },
+        },
+      },
+    });
+
+    return organisations;
+  }
 }

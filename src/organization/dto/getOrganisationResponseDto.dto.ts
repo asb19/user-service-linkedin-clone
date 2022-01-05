@@ -6,3 +6,8 @@ export class GetOrganisation extends ResponseDto {
   @ApiProperty()
   public data: Organisation;
 }
+
+export class GetOrganisations extends ResponseDto {
+  @ApiProperty()
+  public data: Organisation[];
+}
