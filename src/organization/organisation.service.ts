@@ -329,8 +329,12 @@ export class OrganisationService {
     return organisation;
   }
 
-  public async getOrganisations(): Promise<Organisation[]> {
+  public async getOrganisations(type: string): Promise<Organisation[]> {
     const organisations = this.prismaService.organisation.findMany({
+      where: {
+        isInstitute: type == 'institute' ? true : false,
+        isVerified: true,
+      },
       include: {
         City: {
           select: {

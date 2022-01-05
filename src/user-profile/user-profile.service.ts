@@ -38,7 +38,7 @@ export class UserProfileService {
             return {
               ...detail,
               fromTime: new Date(detail.fromTime),
-              endTime: new Date(detail.endTime),
+              endTime: detail.endTime ? new Date(detail.endTime) : undefined,
               Organisation: !oId
                 ? {
                     create: detail.Organisation,
@@ -371,7 +371,7 @@ export class UserProfileService {
         return {
           ...detail,
           fromTime: new Date(detail.fromTime),
-          endTime: new Date(detail.endTime),
+          endTime: detail.endTime ? new Date(detail.endTime) : undefined,
         };
       });
       return this.prismaService.userProfile.update({

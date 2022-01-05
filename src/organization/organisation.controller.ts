@@ -7,9 +7,10 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
 import {
@@ -73,11 +74,14 @@ export class OrganisationController {
     };
   }
 
-  @UseGuards(AuthGuard)
   @Get('/getorganisations/')
-  private async getOrganisations(): Promise<GetOrganisations> {
-    const organisationDetails =
-      await this.organisationService.getOrganisations();
+  @ApiQuery({ name: 'type', enum: ['institute', 'company'] })
+  private async getOrganisations(
+    @Query() query: { type: string },
+  ): Promise<GetOrganisations> {
+    const organisationDetails = await this.organisationService.getOrganisations(
+      query.type,
+    );
     return {
       status: true,
       message: 'got organisations',
