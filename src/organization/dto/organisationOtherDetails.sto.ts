@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 /* eslint-disable prettier/prettier */
 export class OrganisationCreateDetailsDto {
   @ApiProperty()
+  public id?: string;
   public fullName: string;
   public location?: string;
   public cityId: number;
