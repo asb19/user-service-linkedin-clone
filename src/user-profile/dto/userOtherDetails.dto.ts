@@ -13,6 +13,7 @@ export class UserEducationDetailsDto {
   public description: string;
   public mediaUrls: string[];
   public Institute?: OrganisationDetailsDto;
+  public statusId?: number;
 }
 
 export class OrganisationDetailsDto {

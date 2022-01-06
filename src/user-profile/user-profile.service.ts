@@ -290,7 +290,7 @@ export class UserProfileService {
         return {
           ...detail,
           fromTime: new Date(detail.fromTime),
-          endTime: new Date(detail.endTime),
+          endTime: detail.endTime ? new Date(detail.endTime) : undefined,
         };
       });
 
@@ -305,12 +305,13 @@ export class UserProfileService {
                 id: eduDetails[0].id,
               },
               data: {
-                degreeOrDiploma: eduDetails[0].degreeOrDiploma,
-                description: eduDetails[0].description,
-                endTime: eduDetails[0].endTime,
-                field: eduDetails[0].field,
-                fromTime: eduDetails[0].fromTime,
+                degreeOrDiploma: eduDetails[0].degreeOrDiploma || undefined,
+                description: eduDetails[0].description || undefined,
+                endTime: eduDetails[0].endTime || undefined,
+                field: eduDetails[0].field || undefined,
+                fromTime: eduDetails[0].fromTime || undefined,
                 updatedAt: new Date(),
+                statusId: eduDetails[0].statusId == 0 ? 0 : undefined,
 
                 Institute: {
                   create: eduDetails[0].Institute || undefined,
@@ -410,7 +411,7 @@ export class UserProfileService {
       const certificateDetails = body.userCertificateDetails.map((detail) => {
         return {
           ...detail,
-          issuedAt: new Date(detail.issuedAt),
+          issuedAt: detail.issuedAt ? new Date(detail.issuedAt) : undefined,
         };
       });
       return this.prismaService.userProfile.update({
@@ -426,13 +427,17 @@ export class UserProfileService {
                     id: certificateDetails[0].id,
                   },
                   data: {
-                    certificateName: certificateDetails[0].certificateName,
-                    issuedBy: certificateDetails[0].issuedBy,
-                    licenceNumber: certificateDetails[0].licenceNumber,
-                    issuedAt: certificateDetails[0].issuedAt,
-                    certificateURL: certificateDetails[0].certificateURL,
+                    certificateName:
+                      certificateDetails[0].certificateName || undefined,
+                    issuedBy: certificateDetails[0].issuedBy || undefined,
+                    licenceNumber:
+                      certificateDetails[0].licenceNumber || undefined,
+                    issuedAt: certificateDetails[0].issuedAt || undefined,
+                    certificateURL:
+                      certificateDetails[0].certificateURL || undefined,
                     updatedAt: new Date(),
-                    statusCode: certificateDetails[0].statusCode,
+                    statusCode:
+                      certificateDetails[0].statusCode == 0 ? 0 : undefined,
                   },
                 },
               },
@@ -445,7 +450,9 @@ export class UserProfileService {
       const awardDet = body.userAwardsDetails.map((detail) => {
         return {
           ...detail,
-          issuedDate: new Date(detail.issuedDate),
+          issuedDate: detail.issuedDate
+            ? new Date(detail.issuedDate)
+            : undefined,
         };
       });
       return this.prismaService.userProfile.update({
@@ -461,14 +468,14 @@ export class UserProfileService {
                     id: awardDet[0].id,
                   },
                   data: {
-                    issuedDate: awardDet[0].issuedDate,
+                    issuedDate: awardDet[0].issuedDate || undefined,
 
-                    title: awardDet[0].title,
-                    issuedBy: awardDet[0].issuedBy,
+                    title: awardDet[0].title || undefined,
+                    issuedBy: awardDet[0].issuedBy || undefined,
                     awardsDescription: awardDet[0].awardsDescription
                       ? awardDet[0].awardsDescription
                       : undefined,
-                    statusCode: awardDet[0].statusCode,
+                    statusCode: awardDet[0].statusCode == 0 ? 0 : undefined,
                     updatedAt: new Date(),
                   },
                 },
@@ -481,8 +488,8 @@ export class UserProfileService {
       const trainingDet = body.userTrainingDetails.map((detail) => {
         return {
           ...detail,
-          endDate: new Date(detail.endDate),
-          startDate: new Date(detail.startDate),
+          endDate: detail.endDate ? new Date(detail.endDate) : undefined,
+          startDate: detail.startDate ? new Date(detail.startDate) : undefined,
         };
       });
 
@@ -499,14 +506,14 @@ export class UserProfileService {
                     id: trainingDet[0].id,
                   },
                   data: {
-                    title: trainingDet[0].title,
-                    organizer: trainingDet[0].organizer,
-                    startDate: trainingDet[0].startDate,
-                    endDate: trainingDet[0].endDate,
+                    title: trainingDet[0].title || undefined,
+                    organizer: trainingDet[0].organizer || undefined,
+                    startDate: trainingDet[0].startDate || undefined,
+                    endDate: trainingDet[0].endDate || undefined,
                     trainingDecs: trainingDet[0].trainingDecs
                       ? trainingDet[0].trainingDecs
                       : undefined,
-                    statusCode: trainingDet[0].statusCode,
+                    statusCode: trainingDet[0].statusCode == 0 ? 0 : undefined,
                     updatedAt: new Date(),
                   },
                 },
@@ -519,7 +526,9 @@ export class UserProfileService {
       const publicationDetails = body.userPublicationDetails.map((detail) => {
         return {
           ...detail,
-          publishedAt: new Date(detail.publishedAt),
+          publishedAt: detail.publishedAt
+            ? new Date(detail.publishedAt)
+            : undefined,
         };
       });
 
@@ -536,12 +545,15 @@ export class UserProfileService {
                     id: publicationDetails[0].id,
                   },
                   data: {
-                    publishedAt: publicationDetails[0].publishedAt,
-                    title: publicationDetails[0].title,
-                    publisher: publicationDetails[0].publisher,
-                    publicationUrl: publicationDetails[0].publicationUrl,
-                    publicationDecs: publicationDetails[0].publicationDecs,
-                    statusCode: publicationDetails[0].statusCode,
+                    publishedAt: publicationDetails[0].publishedAt || undefined,
+                    title: publicationDetails[0].title || undefined,
+                    publisher: publicationDetails[0].publisher || undefined,
+                    publicationUrl:
+                      publicationDetails[0].publicationUrl || undefined,
+                    publicationDecs:
+                      publicationDetails[0].publicationDecs || undefined,
+                    statusCode:
+                      publicationDetails[0].statusCode == 0 ? 0 : undefined,
                     updatedAt: new Date(),
                   },
                 },
