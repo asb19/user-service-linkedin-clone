@@ -16,7 +16,7 @@ model User {
   altEmail      String?
   firstName     String?
   lastName      String?
-  contactNo     String?      @unique
+  contactNo     String?
   altContactNo  String?
   Password      String?
   userType      USER_TYPE    @default(individual)
