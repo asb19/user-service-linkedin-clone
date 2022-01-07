@@ -10,6 +10,7 @@ export class OrganisationService {
 
   public async createOrganisation(
     body: CreateOrganisationDto,
+    userId: string,
   ): Promise<Organisation> {
     const awardDetails =
       body.orgAwardsDetails && body.orgAwardsDetails.length > 0
@@ -89,6 +90,11 @@ export class OrganisationService {
       const organisation = await this.prismaService.organisation.create({
         data: {
           ...data,
+          UserProfile: {
+            connect: {
+              userId,
+            },
+          },
         },
       });
       return organisation;

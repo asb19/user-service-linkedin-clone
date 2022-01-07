@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -32,9 +33,11 @@ export class OrganisationController {
   @Post('/create')
   private async createOrganisation(
     @Body() body: CreateOrganisationDto,
+    @Req() req,
   ): Promise<GetOrganisation> {
     const organisation = await this.organisationService.createOrganisation(
       body,
+      req.user.id,
     );
     return {
       status: true,

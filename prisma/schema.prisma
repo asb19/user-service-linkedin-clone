@@ -43,11 +43,13 @@ model UserProfile {
   createdAt                      DateTime                @default(now())
   updatedAt                      DateTime?
   mediaUrls                      String[]
+  organisationId                 Int?                    @unique
   currentLocation                City?                   @relation(fields: [currentLocationId], name: "CurrentLocation", references: [id])
   homeLocation                   City?                   @relation(fields: [homeLocationId], name: "HomeLocation", references: [id])
   User                           User                    @relation(fields: [userId], references: [id])
   UserEducation                  UserEducation[]
   UserProfessionalDetail         UserProfessionalDetail?
+  Organisation                   Organisation?           @relation(fields: [organisationId], name: "Organisation", references: [id])
 }
 
 model UserEducation {
@@ -277,6 +279,7 @@ model Organisation {
   OrgCourseDetails   OrgCourseDetails[]
   OrgContactDetails  OrgContactDetails?
   OrgEventDetails    OrgEventDetails[]
+  UserProfile        UserProfile?         @relation("Organisation")
 }
 
 model OrgAwardsDetails {
