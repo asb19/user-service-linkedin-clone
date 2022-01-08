@@ -128,7 +128,7 @@ export class OrganisationService {
       throw new NotFoundException('Organisation not found to edit details');
     }
 
-    if (body.organisationDetails) {
+    if (body.organisationDetails && body.orgContactDetails) {
       const {
         fullName,
         location,
@@ -139,6 +139,8 @@ export class OrganisationService {
 
         estaclishedDate,
       } = body.organisationDetails;
+      const contactDetails = { ...body.orgContactDetails };
+
       return this.prismaService.organisation.update({
         where: {
           id,
@@ -153,6 +155,16 @@ export class OrganisationService {
 
           estaclishedDate: estaclishedDate || undefined,
           updatedAt: new Date(),
+          OrgContactDetails: {
+            update: {
+              emailId: contactDetails.emailId || undefined,
+              altEmailId: contactDetails.altEmailId || undefined,
+              contactNumber: contactDetails.contactNumber || undefined,
+              altContactNum: contactDetails.altContactNum || undefined,
+              websiteUrl: contactDetails.websiteUrl || undefined,
+              updatedAt: new Date(),
+            },
+          },
         },
       });
     }
