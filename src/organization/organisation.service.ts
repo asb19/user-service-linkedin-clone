@@ -153,7 +153,9 @@ export class OrganisationService {
           description: description || undefined,
           logo: logo || undefined,
 
-          estaclishedDate: estaclishedDate || undefined,
+          estaclishedDate: estaclishedDate
+            ? new Date(estaclishedDate)
+            : undefined,
           updatedAt: new Date(),
           OrgContactDetails: {
             update: {
