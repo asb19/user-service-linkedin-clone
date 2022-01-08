@@ -136,6 +136,7 @@ export class OrganisationService {
         affiliation,
         description,
         logo,
+        cityId,
 
         estaclishedDate,
       } = body.organisationDetails;
@@ -151,6 +152,7 @@ export class OrganisationService {
           zipcode: zipcode || undefined,
           affiliation: affiliation || undefined,
           description: description || undefined,
+          cityId: cityId || undefined,
           logo: logo || undefined,
 
           estaclishedDate: estaclishedDate
