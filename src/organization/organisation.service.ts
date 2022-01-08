@@ -144,18 +144,19 @@ export class OrganisationService {
           id,
         },
         data: {
-          fullName,
-          location,
-          zipcode,
-          affiliation,
-          description,
-          logo,
+          fullName: fullName || undefined,
+          location: location || undefined,
+          zipcode: zipcode || undefined,
+          affiliation: affiliation || undefined,
+          description: description || undefined,
+          logo: logo || undefined,
 
-          estaclishedDate,
+          estaclishedDate: estaclishedDate || undefined,
           updatedAt: new Date(),
         },
       });
-    } else if (body.orgAwardsDetails) {
+    }
+    if (body.orgAwardsDetails) {
       //TODO : edit award details
       const awardDet = body.orgAwardsDetails.map((detail) => {
         return {
@@ -174,11 +175,11 @@ export class OrganisationService {
                 id: awardDet[0].id,
               },
               data: {
-                issuedDate: awardDet[0].issuedDate,
+                issuedDate: awardDet[0].issuedDate || undefined,
 
-                title: awardDet[0].title,
-                issuedBy: awardDet[0].issuedBy,
-                statusCode: awardDet[0].statusCode,
+                title: awardDet[0].title || undefined,
+                issuedBy: awardDet[0].issuedBy || undefined,
+                statusCode: awardDet[0].statusCode == 0 ? 0 : undefined,
                 awardsDescription: awardDet[0].awardsDescription
                   ? awardDet[0].awardsDescription
                   : undefined,
@@ -188,11 +189,12 @@ export class OrganisationService {
           },
         },
       });
-    } else if (body.orgTrainingDetails) {
+    }
+    if (body.orgTrainingDetails) {
       const trainingDet = body.orgTrainingDetails.map((detail) => {
         return {
           ...detail,
-          endDate: new Date(detail.endDate),
+          endDate: detail.endDate ? new Date(detail.endDate) : undefined,
           startDate: new Date(detail.startDate),
         };
       });
@@ -221,7 +223,8 @@ export class OrganisationService {
           },
         },
       });
-    } else if (body.orgCourseDetails) {
+    }
+    if (body.orgCourseDetails) {
       const courseDetails = body.orgCourseDetails.map((details) => {
         return {
           ...details,
@@ -239,16 +242,17 @@ export class OrganisationService {
                 id: courseDetails[0].id,
               },
               data: {
-                title: courseDetails[0].title,
-                affiliatedTo: courseDetails[0].affiliatedTo,
-                statusCode: courseDetails[0].statusCode,
+                title: courseDetails[0].title || undefined,
+                affiliatedTo: courseDetails[0].affiliatedTo || undefined,
+                statusCode: courseDetails[0].statusCode == 0 ? 0 : undefined,
                 updatedAt: new Date(),
               },
             },
           },
         },
       });
-    } else if (body.orgContactDetails) {
+    }
+    if (body.orgContactDetails) {
       const contactDetails = { ...body.orgContactDetails };
 
       return this.prismaService.organisation.update({
@@ -258,11 +262,11 @@ export class OrganisationService {
         data: {
           OrgContactDetails: {
             update: {
-              emailId: contactDetails.emailId,
-              altEmailId: contactDetails.altEmailId,
-              contactNumber: contactDetails.contactNumber,
-              altContactNum: contactDetails.altContactNum,
-              websiteUrl: contactDetails.websiteUrl,
+              emailId: contactDetails.emailId || undefined,
+              altEmailId: contactDetails.altEmailId || undefined,
+              contactNumber: contactDetails.contactNumber || undefined,
+              altContactNum: contactDetails.altContactNum || undefined,
+              websiteUrl: contactDetails.websiteUrl || undefined,
               updatedAt: new Date(),
             },
           },
@@ -272,7 +276,7 @@ export class OrganisationService {
       const eventDetails = body.orgEventDetails.map((detail) => {
         return {
           ...detail,
-          date: new Date(detail.date),
+          date: detail.date ? new Date(detail.date) : undefined,
         };
       });
       return this.prismaService.organisation.update({
@@ -286,11 +290,11 @@ export class OrganisationService {
                 id: eventDetails[0].id,
               },
               data: {
-                title: eventDetails[0].title,
-                eventUrl: eventDetails[0].eventUrl,
-                desc: eventDetails[0].desc,
-                date: eventDetails[0].date,
-                statusCode: eventDetails[0].statusCode,
+                title: eventDetails[0].title || undefined,
+                eventUrl: eventDetails[0].eventUrl || undefined,
+                desc: eventDetails[0].desc || undefined,
+                date: eventDetails[0].date || undefined,
+                statusCode: eventDetails[0].statusCode == 0 ? 0 : undefined,
                 updatedAt: new Date(),
               },
             },
