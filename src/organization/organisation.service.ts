@@ -177,7 +177,9 @@ export class OrganisationService {
       const awardDet = body.orgAwardsDetails.map((detail) => {
         return {
           ...detail,
-          issuedDate: new Date(detail.issuedDate),
+          issuedDate: detail.issuedDate
+            ? new Date(detail.issuedDate)
+            : undefined,
         };
       });
       return this.prismaService.organisation.update({
