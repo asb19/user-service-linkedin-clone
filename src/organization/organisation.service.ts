@@ -213,7 +213,7 @@ export class OrganisationService {
         return {
           ...detail,
           endDate: detail.endDate ? new Date(detail.endDate) : undefined,
-          startDate: new Date(detail.startDate),
+          startDate: detail.startDate ? new Date(detail.startDate) : undefined,
         };
       });
       return this.prismaService.organisation.update({
@@ -290,7 +290,8 @@ export class OrganisationService {
           },
         },
       });
-    } else if (body.orgEventDetails) {
+    }
+    if (body.orgEventDetails) {
       const eventDetails = body.orgEventDetails.map((detail) => {
         return {
           ...detail,
