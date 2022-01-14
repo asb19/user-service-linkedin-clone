@@ -353,8 +353,9 @@ export class UserProfileService {
           passportNo: body.userProfileDetails.passportNo || undefined,
           passportPlaceAndCountryOfIssue:
             body.userProfileDetails.passportPlaceAndCountryOfIssue || undefined,
-          passportValidity:
-            body.userProfileDetails.passportValidity || undefined,
+          passportValidity: body.userProfileDetails.passportValidity
+            ? new Date(body.userProfileDetails.passportValidity)
+            : undefined,
           adhaarNo: body.userProfileDetails.adhaarNo || undefined,
         },
       });
