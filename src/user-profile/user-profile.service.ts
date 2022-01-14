@@ -350,6 +350,12 @@ export class UserProfileService {
               ? body.userProfileDetails.preferredLocations
               : undefined,
           updatedAt: new Date(),
+          passportNo: body.userProfileDetails.passportNo || undefined,
+          passportPlaceAndCountryOfIssue:
+            body.userProfileDetails.passportPlaceAndCountryOfIssue || undefined,
+          passportValidity:
+            body.userProfileDetails.passportValidity || undefined,
+          adhaarNo: body.userProfileDetails.adhaarNo || undefined,
         },
       });
     } else if (body.userProfessionalDetails && !body.userExperienceDetails) {
