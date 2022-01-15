@@ -186,6 +186,7 @@ export class UserProfileService {
           body.userProfileDetails && body.userProfileDetails.dob
             ? new Date(body.userProfileDetails.dob)
             : undefined,
+        mediaUrls: body.userProfileDetails.mediaUrls || undefined,
 
         currentLocationId:
           body.userProfileDetails && body.userProfileDetails.currentLocationId

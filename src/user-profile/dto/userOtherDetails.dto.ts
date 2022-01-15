@@ -68,6 +68,7 @@ export class UserProfileDto {
   preferredLocations?: number[];
   passportPlaceAndCountryOfIssue?: string;
   passportValidity?: string;
+  mediaUrls?: string[];
 }
 
 export class UserCertificateDetailsDto {
