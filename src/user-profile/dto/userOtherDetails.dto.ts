@@ -14,6 +14,7 @@ export class UserEducationDetailsDto {
   public mediaUrls: string[];
   public Institute?: OrganisationDetailsDto;
   public statusId?: number;
+  public isCurrent?: boolean;
 }
 
 export class OrganisationDetailsDto {

@@ -65,6 +65,7 @@ model UserEducation {
   instituteId     Int?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime?
+  isCurrent       Boolean       @default(false)
   UserProfile     UserProfile   @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
   Institute       Organisation? @relation(fields: [instituteId], references: [id])
 }

@@ -19,8 +19,8 @@ export class UserProfileService {
             delete detail.instituteId;
             return {
               ...detail,
-              fromTime: new Date(detail.fromTime),
-              endTime: new Date(detail.endTime),
+              fromTime: detail.fromTime ? new Date(detail.fromTime) : undefined,
+              endTime: detail.endTime ? new Date(detail.endTime) : undefined,
               Institute: insId
                 ? { connect: { id: insId } }
                 : {
@@ -290,7 +290,7 @@ export class UserProfileService {
       const eduDetails = body.userEducationDetails.map((detail) => {
         return {
           ...detail,
-          fromTime: new Date(detail.fromTime),
+          fromTime: detail.fromTime ? new Date(detail.fromTime) : undefined,
           endTime: detail.endTime ? new Date(detail.endTime) : undefined,
         };
       });
