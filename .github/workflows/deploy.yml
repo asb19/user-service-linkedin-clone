@@ -1,0 +1,35 @@
+name: actions file for user-microservice code
+on:
+  push:
+    branches:
+      - "*"
+jobs:
+  initializing-and-testing-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checking-out-repo
+        uses: actions/checkout@v2
+      
+      - name: setting up node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          
+      - run: npm install
+          
+  bringing-up-docker-compose:
+    needs: initializing-and-testing-code
+    runs-on: ubuntu-latest
+    steps:
+      - name: running the shell command for docker-compose up
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.INSTANCE_SSH_HOST}}
+          username: ${{secrets.INSTANCE_SSH_USERNAME}}
+          key: ${{secrets.INSTANCE_SSH_KEY}}
+          port: ${{secrets.INSTANCE_SSH_PORT}}
+          script: |
+            sudo su
+            cd /home/ubuntu/user/top-faculty-ms-users
+            sudo git pull
+            sudo docker-compose up -d --build
