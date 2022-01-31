@@ -90,6 +90,9 @@ export class OrganisationService {
       const organisation = await this.prismaService.organisation.create({
         data: {
           ...data,
+          estaclishedDate: estaclishedDate
+            ? new Date(estaclishedDate)
+            : undefined,
           UserProfile: {
             connect: {
               userId,
