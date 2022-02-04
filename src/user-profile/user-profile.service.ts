@@ -401,6 +401,7 @@ export class UserProfileService {
                   data: {
                     designation: expDetails[0].designation || undefined,
                     fromTime: expDetails[0].fromTime || undefined,
+                    description: expDetails[0].description || undefined,
                     endTime: expDetails[0].endTime || undefined,
                     industry: expDetails[0].industry || undefined,
                     mediaUrls: expDetails[0].mediaUrls || undefined,
