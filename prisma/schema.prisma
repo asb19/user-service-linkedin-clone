@@ -97,6 +97,7 @@ model UserExperience {
   id                     String                 @id @default(cuid())
   professionalId         String
   designation            String
+  description            String?
   organisationId         Int?
   industry               String
   statusCode             Int                    @default(1)
@@ -120,7 +121,8 @@ model UserCertificateDetails {
   updatedAt              DateTime?
   licenceNumber          String
   statusCode             Int                    @default(1)
-  issuedAt               DateTime?              @db.Date
+  startDate              DateTime?              @db.Date
+  endDate                DateTime?              @db.Date
   certificateURL         String
   UserProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -160,13 +162,9 @@ model UserTrainingDetails {
 model UserPublicationDetails {
   id                     String                 @id @default(cuid())
   professionalId         String
-  title                  String
-  statusCode             Int                    @default(1)
-  publisher              String?
-  publishedAt            DateTime?              @db.Date
-  publicationUrl         String?
-  publicationDecs        String?
-  mediaUrls              String[]
+  scopusUrl              String?
+  sciUrl                 String?
+  gScholarUrl            String?
   createdAt              DateTime               @default(now())
   updatedAt              DateTime?
   userProfessionalDetail UserProfessionalDetail @relation(fields: [professionalId], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -177,6 +175,8 @@ model UserPatentDetails {
   professionalId         String
   IPRTitle               String
   statusCode             Int                    @default(1)
+  isApproved             Boolean?
+  date                   DateTime?
   title                  String?
   patentDecs             String?
   validCountries         String[]

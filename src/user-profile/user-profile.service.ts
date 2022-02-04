@@ -53,7 +53,8 @@ export class UserProfileService {
         ? body.userCertificateDetails.map((detail) => {
             return {
               ...detail,
-              issuedAt: new Date(detail.issuedAt),
+              startDate: new Date(detail.startDate),
+              endDate: new Date(detail.endDate),
             };
           })
         : undefined;
@@ -84,7 +85,6 @@ export class UserProfileService {
         ? body.userPublicationDetails.map((detail) => {
             return {
               ...detail,
-              publishedAt: new Date(detail.publishedAt),
             };
           })
         : undefined;
@@ -94,6 +94,7 @@ export class UserProfileService {
         ? body.userPatentDetails.map((detail) => {
             return {
               ...detail,
+              date: detail.date ? new Date(detail.date) : undefined,
             };
           })
         : undefined;
@@ -421,7 +422,8 @@ export class UserProfileService {
       const certificateDetails = body.userCertificateDetails.map((detail) => {
         return {
           ...detail,
-          issuedAt: detail.issuedAt ? new Date(detail.issuedAt) : undefined,
+          startDate: detail.startDate ? new Date(detail.startDate) : undefined,
+          issuedAt: detail.endDate ? new Date(detail.endDate) : undefined,
         };
       });
       return this.prismaService.userProfile.update({
@@ -442,7 +444,8 @@ export class UserProfileService {
                     issuedBy: certificateDetails[0].issuedBy || undefined,
                     licenceNumber:
                       certificateDetails[0].licenceNumber || undefined,
-                    issuedAt: certificateDetails[0].issuedAt || undefined,
+                    startDate: certificateDetails[0].startDate || undefined,
+                    endDate: certificateDetails[0].endDate || undefined,
                     certificateURL:
                       certificateDetails[0].certificateURL || undefined,
                     updatedAt: new Date(),
@@ -536,9 +539,6 @@ export class UserProfileService {
       const publicationDetails = body.userPublicationDetails.map((detail) => {
         return {
           ...detail,
-          publishedAt: detail.publishedAt
-            ? new Date(detail.publishedAt)
-            : undefined,
         };
       });
 
@@ -555,15 +555,7 @@ export class UserProfileService {
                     id: publicationDetails[0].id,
                   },
                   data: {
-                    publishedAt: publicationDetails[0].publishedAt || undefined,
-                    title: publicationDetails[0].title || undefined,
-                    publisher: publicationDetails[0].publisher || undefined,
-                    publicationUrl:
-                      publicationDetails[0].publicationUrl || undefined,
-                    publicationDecs:
-                      publicationDetails[0].publicationDecs || undefined,
-                    statusCode:
-                      publicationDetails[0].statusCode == 0 ? 0 : undefined,
+                    ...publicationDetails[0],
                     updatedAt: new Date(),
                   },
                 },
@@ -837,11 +829,7 @@ export class UserProfileService {
                 statusCode: 1,
               },
             },
-            UserPublicationDetails: {
-              where: {
-                statusCode: 1,
-              },
-            },
+            UserPublicationDetails: true,
             UserPatentDetails: {
               where: {
                 statusCode: 1,

@@ -43,6 +43,7 @@ export class UserExperienceDetailsDto {
   id?: string;
   professionalId: string;
   designation: string;
+  description?: string;
   organisationId?: number;
   industry: string;
   fromTime?: string;
@@ -77,7 +78,8 @@ export class UserCertificateDetailsDto {
   certificateName: string;
   issuedBy: string;
   licenceNumber: string;
-  issuedAt?: string;
+  startDate?: string;
+  endDate?: string;
   statusCode?: number;
   certificateURL: string;
 }
@@ -105,13 +107,9 @@ export class UserTrainingDetailsDto {
 
 export class UserPublicationDetailsDto {
   id?: string;
-  title: string;
-  publisher?: string;
-  publishedAt?: string;
-  publicationUrl?: string;
-  publicationDecs?: string;
-  statusCode?: number;
-  mediaUrls?: string[];
+  scopusUrl?: string;
+  sciUrl?: string;
+  gScholarUrl?: string;
 }
 
 export class UserPatentDetailsDto {
@@ -121,6 +119,8 @@ export class UserPatentDetailsDto {
   patentDecs?: string;
   statusCode?: number;
   validCountries: string[];
+  isApproved?: boolean;
+  date?: string;
 }
 
 export class UserHobbiesDto {
