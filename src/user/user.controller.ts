@@ -10,7 +10,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import { UserByUserNameDto } from './dto/getUserByCred.dto';
@@ -69,6 +69,7 @@ export class UserController {
   }
 
   @Delete('/delete')
+  @ApiQuery({ name: 'email', type: String })
   public async delete(@Query('email') email: string): Promise<string> {
     await this.userService.deleteUser(email);
     return `deleted user with email- ${email}`;
