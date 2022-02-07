@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ConfigurationService {
-  private ENV: string;
+  public ENV: string;
   public authUrl: string;
   public commUrl: string;
   public profileImageUrl: string;

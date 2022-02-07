@@ -5,6 +5,8 @@ import {
   BadRequestException,
   Injectable,
   Logger,
+  MethodNotAllowedException,
+  NotAcceptableException,
   NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
@@ -134,5 +136,26 @@ export class UserService {
         throw err;
       throw new BadGatewayException('communication service might be down');
     }
+  }
+
+  public async deleteUser(email: string): Promise<User> {
+    if (
+      this.configrationService.ENV == 'staging' ||
+      this.configrationService.ENV == 'production'
+    )
+      throw new MethodNotAllowedException('You are not allowed to delete');
+
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+    return await this.prismaService.user.delete({
+      where: {
+        email,
+      },
+    });
   }
 }

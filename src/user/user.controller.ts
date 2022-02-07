@@ -2,6 +2,7 @@ import { Prisma, User } from '.prisma/client';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -65,5 +66,11 @@ export class UserController {
   @Get('/greet')
   public async greet(): Promise<string> {
     return 'Greetings authenticated user';
+  }
+
+  @Delete('/delete')
+  public async delete(@Query('email') email: string): Promise<string> {
+    await this.userService.deleteUser(email);
+    return `deleted user with email- ${email}`;
   }
 }
