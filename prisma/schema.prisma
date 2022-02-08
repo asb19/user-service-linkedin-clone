@@ -83,7 +83,7 @@ model UserProfessionalDetail {
   UserCertificateDetails         UserCertificateDetails[]
   UserAwardsDetails              UserAwardsDetails[]
   UserTrainingDetails            UserTrainingDetails[]
-  UserPublicationDetails         UserPublicationDetails[]
+  UserPublicationDetails         UserPublicationDetails?
   UserPatentDetails              UserPatentDetails[]
   UserCurriculumDetails          UserCurriculumDetails?
   UserScholarshipDetails         UserScholarshipDetails[]
@@ -161,7 +161,7 @@ model UserTrainingDetails {
 
 model UserPublicationDetails {
   id                     String                 @id @default(cuid())
-  professionalId         String
+  professionalId         String                 @unique
   scopusUrl              String?
   sciUrl                 String?
   gScholarUrl            String?

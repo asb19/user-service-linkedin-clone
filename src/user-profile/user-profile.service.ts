@@ -80,14 +80,7 @@ export class UserProfileService {
           })
         : undefined;
 
-    const publicationDetails =
-      body.userPublicationDetails && body.userPublicationDetails.length > 0
-        ? body.userPublicationDetails.map((detail) => {
-            return {
-              ...detail,
-            };
-          })
-        : undefined;
+    const publicationDetails = body.userPublicationDetails || undefined;
 
     const patentDetails =
       body.userPatentDetails && body.userPatentDetails.length > 0
@@ -537,11 +530,7 @@ export class UserProfileService {
         },
       });
     } else if (body.userPublicationDetails) {
-      const publicationDetails = body.userPublicationDetails.map((detail) => {
-        return {
-          ...detail,
-        };
-      });
+      const publicationDetails = body.userPublicationDetails;
 
       return this.prismaService.userProfile.update({
         where: {
@@ -552,13 +541,8 @@ export class UserProfileService {
             update: {
               UserPublicationDetails: {
                 update: {
-                  where: {
-                    id: publicationDetails[0].id,
-                  },
-                  data: {
-                    ...publicationDetails[0],
-                    updatedAt: new Date(),
-                  },
+                  ...publicationDetails,
+                  updatedAt: new Date(),
                 },
               },
             },

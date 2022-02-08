@@ -42,7 +42,7 @@ export class CreateUserProfileDto {
   userTrainingDetails: UserTrainingDetailsDto[];
 
   @Type(() => UserPublicationDetailsDto)
-  userPublicationDetails: UserPublicationDetailsDto[];
+  userPublicationDetails: UserPublicationDetailsDto;
 
   @Type(() => UserPatentDetailsDto)
   userPatentDetails: UserPatentDetailsDto[];
