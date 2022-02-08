@@ -87,7 +87,17 @@ export class UserService {
           },
         },
       });
-      return user;
+
+      const returnWithToken = await this.httpService
+        .post(`${this.configrationService.authUrl}auth/token`, {
+          id: user.id,
+          smsVerified: user.smsVerified,
+          emailVerified: user.emailVerified,
+        })
+        .toPromise()
+        .then((data) => data.data);
+
+      return returnWithToken;
     } catch (err) {
       if (err instanceof BadRequestException)
         throw new BadRequestException(err.getResponse());
