@@ -103,6 +103,7 @@ export class UserProfileService {
         ? body.userScholarshipDetails.map((detail) => {
             return {
               ...detail,
+              amount: detail.amount || '0',
             };
           })
         : undefined;
@@ -630,6 +631,7 @@ export class UserProfileService {
       const scholarDetails = body.userScholarshipDetails.map((detail) => {
         return {
           ...detail,
+          amount: detail.amount || '0',
         };
       });
       return this.prismaService.userProfile.update({
@@ -647,7 +649,7 @@ export class UserProfileService {
                   data: {
                     name: scholarDetails[0].name,
                     scholarshipDecs: scholarDetails[0].scholarshipDecs,
-                    amount: scholarDetails[0].amount,
+                    amount: scholarDetails[0].amount || '0',
 
                     issuedBy: scholarDetails[0].issuedBy,
                     statusCode: scholarDetails[0].statusCode,
