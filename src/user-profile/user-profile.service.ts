@@ -418,7 +418,7 @@ export class UserProfileService {
         return {
           ...detail,
           startDate: detail.startDate ? new Date(detail.startDate) : undefined,
-          issuedAt: detail.endDate ? new Date(detail.endDate) : undefined,
+          endDate: detail.endDate ? new Date(detail.endDate) : undefined,
         };
       });
       return this.prismaService.userProfile.update({
