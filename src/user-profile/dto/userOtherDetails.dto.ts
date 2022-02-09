@@ -118,7 +118,6 @@ export class UserPatentDetailsDto {
   title?: string;
   patentDecs?: string;
   statusCode?: number;
-  validCountries: string[];
   isApproved?: boolean;
   date?: string;
 }

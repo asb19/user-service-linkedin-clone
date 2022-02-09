@@ -554,6 +554,7 @@ export class UserProfileService {
       const patentDetails = body.userPatentDetails.map((detail) => {
         return {
           ...detail,
+          date: detail.date ? new Date(detail.date) : undefined,
         };
       });
 
@@ -573,8 +574,6 @@ export class UserProfileService {
                     IPRTitle: patentDetails[0].IPRTitle,
                     title: patentDetails[0].title,
                     patentDecs: patentDetails[0].patentDecs,
-
-                    validCountries: patentDetails[0].validCountries,
                     statusCode: patentDetails[0].statusCode,
                     updatedAt: new Date(),
                   },
@@ -799,6 +798,18 @@ export class UserProfileService {
             Experiences: {
               where: {
                 statusCode: 1,
+              },
+              include: {
+                Organisation: {
+                  select: {
+                    City: {
+                      select: {
+                        fullName: true,
+                      },
+                    },
+                    fullName: true,
+                  },
+                },
               },
             },
             UserCertificateDetails: {
