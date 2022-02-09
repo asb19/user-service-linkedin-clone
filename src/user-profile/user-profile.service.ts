@@ -574,6 +574,7 @@ export class UserProfileService {
                     IPRTitle: patentDetails[0].IPRTitle,
                     title: patentDetails[0].title,
                     patentDecs: patentDetails[0].patentDecs,
+                    date: patentDetails[0].date || undefined,
                     statusCode: patentDetails[0].statusCode,
                     updatedAt: new Date(),
                   },
