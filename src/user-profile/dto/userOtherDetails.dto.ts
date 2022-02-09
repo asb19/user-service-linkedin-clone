@@ -141,7 +141,7 @@ export class UserScholarshipDetailsDto {
   id?: number;
   name: string;
   scholarshipDecs?: string;
-  amount: string;
+  amount?: string;
   statusCode?: number;
   issuedBy: string;
 }
