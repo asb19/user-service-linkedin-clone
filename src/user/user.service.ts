@@ -83,6 +83,17 @@ export class UserService {
           UserProfile: {
             create: {
               photoUrl: this.configrationService.profileImageUrl || '',
+              UserProfessionalDetail: {
+                create: {
+                  UserPublicationDetails: {
+                    create: {
+                      gScholarUrl: null,
+                      sciUrl: null,
+                      scopusUrl: null,
+                    },
+                  },
+                },
+              },
             },
           },
         },
