@@ -1,4 +1,4 @@
-import { Organisation } from '.prisma/client';
+import { Organisation, OrganisationRecruiters } from '.prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/response.dto';
 
@@ -10,4 +10,9 @@ export class GetOrganisation extends ResponseDto {
 export class GetOrganisations extends ResponseDto {
   @ApiProperty()
   public data: Organisation[];
+}
+
+export class GetRecruiters extends ResponseDto {
+  @ApiProperty()
+  public data: OrganisationRecruiters[];
 }
