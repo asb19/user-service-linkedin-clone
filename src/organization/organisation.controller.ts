@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Organisation } from '.prisma/client';
+import { Organisation, OrganisationRecruiters } from '.prisma/client';
 import {
   Body,
   Controller,
@@ -17,6 +17,7 @@ import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
 import {
   GetOrganisation,
   GetOrganisations,
+  GetRecruiters,
 } from './dto/getOrganisationResponseDto.dto';
 import { OrganisationService } from './organisation.service';
 
@@ -89,6 +90,20 @@ export class OrganisationController {
       status: true,
       message: 'got organisations',
       data: organisationDetails,
+    };
+  }
+
+  @Get('/recruiters')
+  private async getRecruiters(
+    @Query() query: { orgid: string },
+  ): Promise<GetRecruiters> {
+    const recruiters = await this.organisationService.getRecruitersFromOrgId(
+      parseInt(query.orgid),
+    );
+    return {
+      status: true,
+      message: 'got recruiters',
+      data: recruiters,
     };
   }
 }

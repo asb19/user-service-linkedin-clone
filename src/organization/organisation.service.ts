@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Organisation } from '.prisma/client';
+import { Organisation, OrganisationRecruiters } from '.prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
@@ -98,6 +98,15 @@ export class OrganisationService {
               userId,
             },
           },
+        },
+      });
+
+      await this.prismaService.organisationRecruiters.create({
+        data: {
+          orgId: organisation.id,
+          userId,
+          role: 'OWNER',
+          status: 1,
         },
       });
       return organisation;
@@ -377,5 +386,15 @@ export class OrganisationService {
     });
 
     return organisations;
+  }
+
+  public async getRecruitersFromOrgId(
+    orgId: number,
+  ): Promise<OrganisationRecruiters[]> {
+    return await this.prismaService.organisationRecruiters.findMany({
+      where: {
+        orgId,
+      },
+    });
   }
 }
