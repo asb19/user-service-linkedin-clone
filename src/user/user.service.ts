@@ -31,6 +31,32 @@ export class UserService {
     });
   }
 
+  public async iviteAsAdmin(username: string, orgId: number): Promise<User> {
+    const user = await this.findUser(username);
+    if (!user) throw new NotFoundException('user not found');
+    const relation = await this.prismaService.organisationRecruiters.findFirst({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    if (relation)
+      throw new BadRequestException('already a member of another organisation');
+    return await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        OrganisationRecruiters: {
+          create: {
+            orgId,
+          },
+        },
+        userType: 'recruiter',
+      },
+    });
+  }
+
   public async createUser(username: string, password: string): Promise<User> {
     return (
       (await this.prismaService.user.findUnique({

@@ -19,6 +19,7 @@ import {
   GetOrganisations,
   GetRecruiters,
 } from './dto/getOrganisationResponseDto.dto';
+import { InviteToOrganisationDto } from './dto/invite.dto';
 import { OrganisationService } from './organisation.service';
 
 @ApiTags('Organisation')
@@ -78,6 +79,7 @@ export class OrganisationController {
     };
   }
 
+  @UseGuards(AuthGuard)
   @Get('/getorganisations/')
   @ApiQuery({ name: 'type', enum: ['institute', 'company'] })
   private async getOrganisations(
@@ -93,6 +95,24 @@ export class OrganisationController {
     };
   }
 
+  @UseGuards(AuthGuard)
+  @Post('/invite')
+  @ApiQuery({ name: 'orgid', example: '25' })
+  @ApiQuery({ name: 'email', example: 'amir@gmail.com' })
+  private async inviteToOrganisation(
+    @Query() query: { orgid: string; email: string },
+  ): Promise<InviteToOrganisationDto> {
+    const invite = await this.organisationService.inviteUser(
+      parseInt(query.orgid),
+      query.email,
+    );
+    return {
+      status: true,
+      message: 'invites ent',
+      data: invite,
+    };
+  }
+
   @Get('/recruiters')
   private async getRecruiters(
     @Query() query: { orgid: string },
@@ -104,6 +124,19 @@ export class OrganisationController {
       status: true,
       message: 'got recruiters',
       data: recruiters,
+    };
+  }
+
+  @Get('/inviteeData')
+  @ApiQuery({ name: 'email', example: 'amir@gmail.com' })
+  private async getInvitee(
+    @Query() query: { email: string },
+  ): Promise<InviteToOrganisationDto> {
+    const invitee = await this.organisationService.getInviteeData(query.email);
+    return {
+      status: true,
+      message: 'got invitee data',
+      data: invitee,
     };
   }
 }
