@@ -1,6 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Organisation, OrganisationRecruiters } from '.prisma/client';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Organisation,
+  OrganisationInvites,
+  OrganisationRecruiters,
+} from '.prisma/client';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
 
@@ -93,11 +101,6 @@ export class OrganisationService {
           estaclishedDate: estaclishedDate
             ? new Date(estaclishedDate)
             : undefined,
-          UserProfile: {
-            connect: {
-              userId,
-            },
-          },
         },
       });
 
@@ -397,4 +400,35 @@ export class OrganisationService {
       },
     });
   }
+
+  public async getInviteeData(userEmail: string): Promise<OrganisationInvites> {
+    return await this.prismaService.organisationInvites.findFirst({
+      where: {
+        userEmail,
+        status: 'pending',
+      },
+    });
+  }
+
+  public async inviteUser(
+    orgId: number,
+    userEmail: string,
+  ): Promise<OrganisationInvites> {
+    const user = await this.prismaService.organisationInvites.findFirst({
+      where: {
+        userEmail,
+        orgId,
+      },
+    });
+
+    if (user) throw new BadRequestException('already invited');
+    return await this.prismaService.organisationInvites.create({
+      data: {
+        orgId,
+        userEmail,
+      },
+    });
+  }
+
+  //TODO: pending get invite list and accept invite
 }

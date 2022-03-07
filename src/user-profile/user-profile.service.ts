@@ -1,5 +1,6 @@
 import { UserProfile } from '.prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { transformDocument } from '@prisma/client/runtime';
 // import exp from 'constants';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserProfileDto } from './dto/createUserProfileDto.dto';
@@ -766,100 +767,125 @@ export class UserProfileService {
     }
   }
 
-  public async getProfileDetails(userId: string): Promise<UserProfile> {
-    const user = await this.prismaService.userProfile.findUnique({
-      where: {
-        userId,
-      },
-      include: {
-        Organisation: {
-          select: {
-            id: true,
-            fullName: true,
-            logo: true,
-          },
+  public async getProfileDetails(userId: string): Promise<
+    UserProfile & {
+      Organisation: {
+        fullName: string;
+        id: number;
+        logo: string;
+      };
+    }
+  > {
+    const [user, orgData] = await Promise.all([
+      this.prismaService.userProfile.findUnique({
+        where: {
+          userId,
         },
-        UserEducation: {
-          where: {
-            statusId: 1,
-          },
-          include: {
-            Institute: {
-              select: {
-                fullName: true,
-              },
+        include: {
+          UserEducation: {
+            where: {
+              statusId: 1,
             },
-          },
-        },
-        User: true,
-        currentLocation: true,
-        homeLocation: true,
-        UserProfessionalDetail: {
-          include: {
-            Experiences: {
-              where: {
-                statusCode: 1,
-              },
-              include: {
-                Organisation: {
-                  select: {
-                    City: {
-                      select: {
-                        fullName: true,
-                      },
-                    },
-                    fullName: true,
-                  },
+            include: {
+              Institute: {
+                select: {
+                  fullName: true,
                 },
               },
             },
-            UserCertificateDetails: {
-              where: {
-                statusCode: 1,
+          },
+          User: true,
+          currentLocation: true,
+          homeLocation: true,
+          UserProfessionalDetail: {
+            include: {
+              Experiences: {
+                where: {
+                  statusCode: 1,
+                },
+                include: {
+                  Organisation: {
+                    select: {
+                      City: {
+                        select: {
+                          fullName: true,
+                        },
+                      },
+                      fullName: true,
+                    },
+                  },
+                },
               },
-            },
-            UserAwardsDetails: {
-              where: {
-                statusCode: 1,
+              UserCertificateDetails: {
+                where: {
+                  statusCode: 1,
+                },
               },
-            },
-            UserTrainingDetails: {
-              where: {
-                statusCode: 1,
+              UserAwardsDetails: {
+                where: {
+                  statusCode: 1,
+                },
               },
-            },
-            UserPublicationDetails: true,
-            UserPatentDetails: {
-              where: {
-                statusCode: 1,
+              UserTrainingDetails: {
+                where: {
+                  statusCode: 1,
+                },
               },
-            },
-            UserHobbies: true,
-            UserCurriculumDetails: true,
-            UserScholarshipDetails: {
-              where: {
-                statusCode: 1,
+              UserPublicationDetails: true,
+              UserPatentDetails: {
+                where: {
+                  statusCode: 1,
+                },
               },
-            },
-            UserGoogleCertificationDetails: {
-              where: {
-                statusCode: 1,
+              UserHobbies: true,
+              UserCurriculumDetails: true,
+              UserScholarshipDetails: {
+                where: {
+                  statusCode: 1,
+                },
               },
-            },
-            UserScopusDetails: {
-              where: {
-                statusCode: 1,
+              UserGoogleCertificationDetails: {
+                where: {
+                  statusCode: 1,
+                },
               },
-            },
-            UserHindexDetails: {
-              where: {
-                statusCode: 1,
+              UserScopusDetails: {
+                where: {
+                  statusCode: 1,
+                },
+              },
+              UserHindexDetails: {
+                where: {
+                  statusCode: 1,
+                },
               },
             },
           },
         },
+      }),
+
+      this.prismaService.organisationRecruiters.findFirst({
+        where: {
+          userId,
+        },
+        select: {
+          Organisation: {
+            select: {
+              id: true,
+              fullName: true,
+              logo: true,
+            },
+          },
+        },
+      }),
+    ]);
+    return {
+      ...user,
+      Organisation: {
+        fullName: orgData.Organisation.fullName,
+        id: orgData.Organisation.id,
+        logo: orgData.Organisation.logo,
       },
-    });
-    return user;
+    };
   }
 }

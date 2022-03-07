@@ -11,7 +11,10 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateUserProfileDto } from './dto/createUserProfileDto.dto';
-import { GetUserProfile } from './dto/getUserProfileResponse.dto';
+import {
+  GetUserProfile,
+  GetUserProfileWithOtherDetailsDto,
+} from './dto/getUserProfileResponse.dto';
 import { UserProfileService } from './user-profile.service';
 
 @ApiTags('UserProfile')
@@ -56,7 +59,9 @@ export class UserProfileController {
 
   @UseGuards(AuthGuard)
   @Get('/getProfileDetails')
-  private async GetDetails(@Req() req): Promise<GetUserProfile> {
+  private async GetDetails(
+    @Req() req,
+  ): Promise<GetUserProfileWithOtherDetailsDto> {
     const userProfile = await this.userProfileService.getProfileDetails(
       req.user.id,
     );

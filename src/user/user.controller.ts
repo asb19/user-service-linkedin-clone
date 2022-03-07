@@ -13,7 +13,7 @@ import {
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateUserDto } from './dto/createUserDto.dto';
-import { UserByUserNameDto } from './dto/getUserByCred.dto';
+import { InviteActionDto, UserByUserNameDto } from './dto/getUserByCred.dto';
 import { GetUser } from './dto/getUserResponse.dto';
 import { ResetPasswordDto } from './dto/resetPasswordDto.dto';
 import { RegisterQueryDto, UpdateUserDto } from './dto/updateUserDto.dto';
@@ -73,5 +73,14 @@ export class UserController {
   public async delete(@Query('email') email: string): Promise<string> {
     await this.userService.deleteUser(email);
     return `deleted user with email- ${email}`;
+  }
+
+  @Post('/makeAdmin')
+  public async inviteAction(@Query() query: InviteActionDto): Promise<User> {
+    const user = await this.userService.iviteAsAdmin(
+      query.username,
+      parseInt(query.orgid),
+    );
+    return user;
   }
 }

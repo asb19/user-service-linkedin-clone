@@ -4,3 +4,13 @@ import { ResponseDto } from 'src/common/dto/response.dto';
 export class GetUserProfile extends ResponseDto {
   public data: UserProfile;
 }
+
+export class GetUserProfileWithOtherDetailsDto extends ResponseDto {
+  public data: UserProfile & {
+    Organisation: {
+      fullName: string;
+      id: number;
+      logo: string;
+    };
+  };
+}
