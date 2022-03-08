@@ -7,6 +7,7 @@ export class GetUserProfile extends ResponseDto {
 
 export class GetUserProfileWithOtherDetailsDto extends ResponseDto {
   public data: UserProfile & {
+    organisationId: number;
     Organisation: {
       fullName: string;
       id: number;

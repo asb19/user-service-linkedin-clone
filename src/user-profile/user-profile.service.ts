@@ -769,6 +769,7 @@ export class UserProfileService {
 
   public async getProfileDetails(userId: string): Promise<
     UserProfile & {
+      organisationId: number;
       Organisation: {
         fullName: string;
         id: number;
@@ -881,6 +882,7 @@ export class UserProfileService {
     ]);
     return {
       ...user,
+      organisationId: orgData.Organisation.id,
       Organisation: {
         fullName: orgData.Organisation.fullName,
         id: orgData.Organisation.id,
