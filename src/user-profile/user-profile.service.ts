@@ -882,12 +882,14 @@ export class UserProfileService {
     ]);
     return {
       ...user,
-      organisationId: orgData.Organisation.id,
-      Organisation: {
-        fullName: orgData.Organisation.fullName,
-        id: orgData.Organisation.id,
-        logo: orgData.Organisation.logo,
-      },
+      organisationId: orgData ? orgData.Organisation.id : undefined,
+      Organisation: orgData
+        ? {
+            fullName: orgData.Organisation.fullName,
+            id: orgData.Organisation.id,
+            logo: orgData.Organisation.logo,
+          }
+        : undefined,
     };
   }
 }
