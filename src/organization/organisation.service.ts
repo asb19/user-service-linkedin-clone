@@ -95,6 +95,15 @@ export class OrganisationService {
       if (type && type.toLowerCase() === 'noneducational') {
         data['isInstitute'] = false;
       }
+
+      const alreadyOrg =
+        await this.prismaService.organisationRecruiters.findFirst({
+          where: {
+            userId,
+          },
+        });
+      if (alreadyOrg)
+        throw new BadRequestException('already a member of an organisation');
       const organisation = await this.prismaService.organisation.create({
         data: {
           ...data,
