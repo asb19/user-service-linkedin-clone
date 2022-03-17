@@ -372,6 +372,18 @@ model OrganisationInvites {
   updatedAt DateTime?
 }
 
+model OrganisationReviews {
+  id          String    @id @default(cuid())
+  userId      String
+  orgId       Int
+  rating      Int
+  reviewTitle String
+  reviewText  String?
+  userDetail  String    @default("individual")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime?
+}
+
 model Country {
   id        Int     @id @default(autoincrement())
   name      String

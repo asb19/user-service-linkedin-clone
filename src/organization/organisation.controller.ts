@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Paginationdto } from 'src/common/dto/pagination.dto';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
 import {
@@ -20,6 +21,11 @@ import {
   GetRecruiters,
 } from './dto/getOrganisationResponseDto.dto';
 import { InviteToOrganisationDto } from './dto/invite.dto';
+import {
+  OrganisationReviewDto,
+  OrganisationReviewResponseDto,
+  ReviewListDto,
+} from './dto/orgReviewDto.dto';
 import { OrganisationService } from './organisation.service';
 
 @ApiTags('Organisation')
@@ -137,6 +143,37 @@ export class OrganisationController {
       status: true,
       message: 'got invitee data',
       data: invitee,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/review')
+  private async createOrganisationReview(
+    @Body() body: OrganisationReviewDto,
+  ): Promise<OrganisationReviewResponseDto> {
+    const review = await this.organisationService.createOrUpdateReview(body);
+    return {
+      status: true,
+      message: 'organisation review created successfully',
+      data: review,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/review/:id')
+  private async getOrganisationReview(
+    @Param() id: string,
+    @Query() query: Paginationdto,
+  ): Promise<ReviewListDto> {
+    const review = await this.organisationService.getReviewListdata(
+      parseInt(id),
+      query.page,
+      query.limit,
+    );
+    return {
+      status: true,
+      message: 'organisation review fetched successfully',
+      data: review,
     };
   }
 }
