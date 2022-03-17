@@ -20,7 +20,7 @@ export class OrganisationReviewResponseDto extends ResponseDto {
 
 export class OrganisationReviewListDto {
   @ApiProperty()
-  public reviewList: OrganisationReviewDto[];
+  public reviewList: (OrganisationReviewDto & { editAccess: boolean })[];
   public rating: {
     rating: number;
   };

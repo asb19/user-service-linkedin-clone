@@ -164,11 +164,13 @@ export class OrganisationController {
   private async getOrganisationReview(
     @Param() id: string,
     @Query() query: Paginationdto,
+    @Req() req,
   ): Promise<ReviewListDto> {
     const review = await this.organisationService.getReviewListdata(
       parseInt(id),
       query.page,
       query.limit,
+      req.user.id,
     );
     return {
       status: true,
