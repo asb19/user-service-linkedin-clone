@@ -10,7 +10,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { resourceLimits } from 'worker_threads';
 import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
+import {
+  OrganisationReviewDto,
+  OrganisationReviewListDto,
+} from './dto/orgReviewDto.dto';
 
 @Injectable()
 export class OrganisationService {
@@ -437,6 +442,86 @@ export class OrganisationService {
         userEmail,
       },
     });
+  }
+
+  public async createOrUpdateReview(
+    body: OrganisationReviewDto,
+  ): Promise<OrganisationReviewDto> {
+    if (body.id) {
+      const userDetails =
+        await this.prismaService.userProfessionalDetail.findUnique({
+          where: {
+            userId: body.userId,
+          },
+          select: {
+            Experiences: {
+              where: {
+                statusCode: 1,
+              },
+              select: {
+                designation: true,
+              },
+              take: 1,
+            },
+          },
+        });
+
+      return await this.prismaService.organisationReviews.create({
+        data: {
+          orgId: body.orgId,
+          rating: body.rating,
+          userId: body.userId,
+          reviewTitle: body.reviewTitle,
+          reviewText: body.reviewText,
+          userDetail:
+            userDetails.Experiences.length > 0
+              ? userDetails.Experiences[0].designation
+              : undefined,
+        },
+      });
+    }
+
+    const review = await this.prismaService.organisationReviews.update({
+      where: {
+        id: body.id,
+      },
+      data: {
+        updatedAt: new Date(),
+        rating: body.rating,
+        reviewText: body.reviewText,
+        reviewTitle: body.reviewTitle,
+      },
+    });
+    return review;
+  }
+
+  public async getReviewListdata(
+    orgId: number,
+    page: number,
+    limit: number,
+  ): Promise<OrganisationReviewListDto> {
+    const average = await this.prismaService.organisationReviews.aggregate({
+      where: {
+        orgId,
+      },
+      _avg: {
+        rating: true,
+      },
+    });
+
+    const allReviews = await this.prismaService.organisationReviews.findMany({
+      where: {
+        orgId,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      skip: page * limit,
+    });
+    const data = {
+      reviewList: allReviews,
+      rating: average ? average._avg : null,
+    };
+    return data;
   }
 
   //TODO: pending get invite list and accept invite
