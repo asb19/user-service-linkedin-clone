@@ -18,9 +18,14 @@ export class OrganisationReviewResponseDto extends ResponseDto {
   public data: OrganisationReviewDto;
 }
 
+export class ReviewListStructuredto extends OrganisationReviewDto {
+  @ApiProperty()
+  public editAccess: boolean;
+}
+
 export class OrganisationReviewListDto {
   @ApiProperty()
-  public reviewList: (OrganisationReviewDto & { editAccess: boolean })[];
+  public reviewList: ReviewListStructuredto[];
   public rating: {
     rating: number;
   };
