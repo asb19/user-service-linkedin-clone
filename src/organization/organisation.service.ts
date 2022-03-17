@@ -499,6 +499,7 @@ export class OrganisationService {
     orgId: number,
     page: number,
     limit: number,
+    userId: string,
   ): Promise<OrganisationReviewListDto> {
     const average = await this.prismaService.organisationReviews.aggregate({
       where: {
@@ -517,8 +518,12 @@ export class OrganisationService {
       take: limit,
       skip: page * limit,
     });
+    const reviewList = allReviews.map((review) => ({
+      ...review,
+      editAccess: review.userId == userId,
+    }));
     const data = {
-      reviewList: allReviews,
+      reviewList,
       rating: average ? average._avg : null,
     };
     return data;
