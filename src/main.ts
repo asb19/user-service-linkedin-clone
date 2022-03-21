@@ -47,7 +47,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   //TODO: create queue service
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.listen(3001);
   console.log('App is running at : ', await app.getUrl());
 }
