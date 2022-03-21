@@ -899,18 +899,19 @@ export class UserProfileService {
     page: number,
     limit: number,
   ): Promise<SearchUsersByNameDto[]> {
+    const splittedText = text.split(' ');
     const users = await this.prismaService.user.findMany({
       where: {
         OR: [
           {
             firstName: {
-              startsWith: text,
+              startsWith: splittedText.length > 1 ? splittedText[0] : text,
               mode: 'insensitive',
             },
           },
           {
             lastName: {
-              startsWith: text,
+              startsWith: splittedText.length > 1 ? splittedText[1] : text,
               mode: 'insensitive',
             },
           },
