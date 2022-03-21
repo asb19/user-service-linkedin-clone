@@ -4,6 +4,7 @@ import { transformDocument } from '@prisma/client/runtime';
 // import exp from 'constants';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserProfileDto } from './dto/createUserProfileDto.dto';
+import { SearchUsersByNameDto } from './dto/searchUsers.dto';
 
 @Injectable()
 export class UserProfileService {
@@ -891,5 +892,67 @@ export class UserProfileService {
           }
         : undefined,
     };
+  }
+
+  public async searchForUserNames(
+    text: string,
+    page: number,
+    limit: number,
+  ): Promise<SearchUsersByNameDto[]> {
+    const users = await this.prismaService.user.findMany({
+      where: {
+        OR: [
+          {
+            firstName: {
+              startsWith: text,
+              mode: 'insensitive',
+            },
+          },
+          {
+            lastName: {
+              startsWith: text,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        UserProfile: {
+          select: {
+            photoUrl: true,
+            gender: true,
+            UserProfessionalDetail: {
+              select: {
+                Experiences: {
+                  where: {
+                    isCurrent: true,
+                  },
+                  select: {
+                    designation: true,
+                  },
+                  take: 1,
+                },
+              },
+            },
+          },
+        },
+      },
+      take: limit,
+      skip: page * limit,
+    });
+
+    const searchData: SearchUsersByNameDto[] = users.map((user) => ({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      photoUrl: user.UserProfile.photoUrl,
+      gender: user.UserProfile.gender,
+      designation:
+        user.UserProfile.UserProfessionalDetail.Experiences[0].designation,
+    }));
+    return searchData;
   }
 }

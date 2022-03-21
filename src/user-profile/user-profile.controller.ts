@@ -5,6 +5,7 @@ import {
   Get,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +16,8 @@ import {
   GetUserProfile,
   GetUserProfileWithOtherDetailsDto,
 } from './dto/getUserProfileResponse.dto';
+import { SearchQueryDto } from './dto/searchQuery.dto';
+import { SearchResponseDto } from './dto/searchUsers.dto';
 import { UserProfileService } from './user-profile.service';
 
 @ApiTags('UserProfile')
@@ -69,6 +72,24 @@ export class UserProfileController {
       status: true,
       message: 'got profile data',
       data: userProfile,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/search')
+  private async SearchUsers(
+    @Req() req,
+    @Query() query: SearchQueryDto,
+  ): Promise<SearchResponseDto> {
+    const searches = await this.userProfileService.searchForUserNames(
+      query.text,
+      query.page || 0,
+      query.limit || 10,
+    );
+    return {
+      status: true,
+      message: 'got searched data',
+      data: searches,
     };
   }
 }
