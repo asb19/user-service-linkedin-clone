@@ -948,10 +948,10 @@ export class UserProfileService {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
-      photoUrl: user.UserProfile.photoUrl,
-      gender: user.UserProfile.gender,
+      photoUrl: user.UserProfile ? user.UserProfile.photoUrl : undefined,
+      gender: user.UserProfile ? user.UserProfile.gender : undefined,
       designation:
-        user.UserProfile.UserProfessionalDetail.Experiences[0].designation,
+        user.UserProfile?.UserProfessionalDetail?.Experiences[0]?.designation,
     }));
     return searchData;
   }
