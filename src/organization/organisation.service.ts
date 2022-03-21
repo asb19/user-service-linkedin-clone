@@ -447,7 +447,7 @@ export class OrganisationService {
   public async createOrUpdateReview(
     body: OrganisationReviewDto,
   ): Promise<OrganisationReviewDto> {
-    if (body.id) {
+    if (!body.id) {
       const userDetails =
         await this.prismaService.userProfessionalDetail.findUnique({
           where: {
