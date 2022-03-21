@@ -162,7 +162,7 @@ export class OrganisationController {
   @UseGuards(AuthGuard)
   @Get('/review/:id')
   private async getOrganisationReview(
-    @Param() id: string,
+    @Param('id') id: string,
     @Query() query: Paginationdto,
     @Req() req,
   ): Promise<ReviewListDto> {
