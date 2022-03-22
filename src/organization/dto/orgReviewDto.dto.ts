@@ -9,13 +9,18 @@ export class OrganisationReviewDto {
   public rating: number;
   public reviewTitle: string;
   public reviewText?: string;
-  public userDetail?: string;
+  public userType?: string;
+  public userDesignation?: string;
   public createdAt?: Date;
   public updatedAt?: Date;
 }
 
 export class OrganisationReviewResponseDto extends ResponseDto {
   public data: OrganisationReviewDto;
+}
+
+export class OrganisationDeleteReviewResponseDto extends ResponseDto {
+  public data: string;
 }
 
 export class ReviewListStructuredto extends OrganisationReviewDto {

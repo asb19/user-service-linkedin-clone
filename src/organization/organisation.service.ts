@@ -474,9 +474,9 @@ export class OrganisationService {
           reviewTitle: body.reviewTitle,
           reviewText: body.reviewText,
           userDetail:
-            userDetails.Experiences.length > 0
-              ? userDetails.Experiences[0].designation
-              : undefined,
+            body.userType && body.userDesignation
+              ? body.userType + ' ' + body.userDesignation
+              : 'individual',
         },
       });
     }
@@ -490,6 +490,10 @@ export class OrganisationService {
         rating: body.rating,
         reviewText: body.reviewText,
         reviewTitle: body.reviewTitle,
+        userDetail:
+          body.userType && body.userDesignation
+            ? body.userType + ' ' + body.userDesignation
+            : undefined,
       },
     });
     return review;
@@ -527,6 +531,18 @@ export class OrganisationService {
       rating: average ? average._avg : null,
     };
     return data;
+  }
+
+  public async deleteUserReview(
+    userId: string,
+    reveiewId: string,
+  ): Promise<void> {
+    await this.prismaService.organisationReviews.deleteMany({
+      where: {
+        id: reveiewId,
+        userId,
+      },
+    });
   }
 
   //TODO: pending get invite list and accept invite

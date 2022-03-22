@@ -3,7 +3,9 @@ import { Organisation, OrganisationRecruiters } from '.prisma/client';
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Logger,
   Param,
   Post,
   Put,
@@ -22,6 +24,7 @@ import {
 } from './dto/getOrganisationResponseDto.dto';
 import { InviteToOrganisationDto } from './dto/invite.dto';
 import {
+  OrganisationDeleteReviewResponseDto,
   OrganisationReviewDto,
   OrganisationReviewResponseDto,
   ReviewListDto,
@@ -166,6 +169,7 @@ export class OrganisationController {
     @Query() query: Paginationdto,
     @Req() req,
   ): Promise<ReviewListDto> {
+    console.log(query);
     const review = await this.organisationService.getReviewListdata(
       parseInt(id),
       query.page,
@@ -176,6 +180,20 @@ export class OrganisationController {
       status: true,
       message: 'organisation review fetched successfully',
       data: review,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('/review/:id')
+  private async deleteReview(
+    @Param('id') id: string,
+    @Req() req,
+  ): Promise<OrganisationDeleteReviewResponseDto> {
+    await this.organisationService.deleteUserReview(req.user.id, id);
+    return {
+      status: true,
+      message: 'organisation review deleted successfully',
+      data: 'review deleted',
     };
   }
 }
