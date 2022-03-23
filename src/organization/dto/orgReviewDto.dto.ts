@@ -34,6 +34,7 @@ export class OrganisationReviewListDto {
   public rating: {
     rating: number;
   };
+  public totalReviews: number;
 }
 
 export class ReviewListDto extends ResponseDto {

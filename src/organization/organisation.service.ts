@@ -512,6 +512,9 @@ export class OrganisationService {
       _avg: {
         rating: true,
       },
+      _count: {
+        id: true,
+      },
     });
 
     const allReviews = await this.prismaService.organisationReviews.findMany({
@@ -526,9 +529,10 @@ export class OrganisationService {
       ...review,
       editAccess: review.userId == userId,
     }));
-    const data = {
+    const data: OrganisationReviewListDto = {
       reviewList,
       rating: average ? average._avg : null,
+      totalReviews: average._count.id,
     };
     return data;
   }
