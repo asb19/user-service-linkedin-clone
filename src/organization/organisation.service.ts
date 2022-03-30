@@ -16,6 +16,7 @@ import {
   OrganisationReviewDto,
   OrganisationReviewListDto,
 } from './dto/orgReviewDto.dto';
+import { SearchOrganizationsDto } from './dto/serachOrganizations.dto';
 
 @Injectable()
 export class OrganisationService {
@@ -546,6 +547,39 @@ export class OrganisationService {
         id: reveiewId,
         userId,
       },
+    });
+  }
+
+  public async searchOrganizations(
+    text: string,
+    page: number,
+    limit: number,
+  ): Promise<SearchOrganizationsDto[]> {
+    return await this.prismaService.organisation.findMany({
+      where: {
+        OR: [
+          {
+            fullName: {
+              startsWith: text.toLowerCase(),
+              mode: 'insensitive',
+            },
+          },
+          {
+            fullName: {
+              contains: text.toLowerCase(),
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        location: true,
+        logo: true,
+        fullName: true,
+      },
+      take: limit,
+      skip: page * limit,
     });
   }
 

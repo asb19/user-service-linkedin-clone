@@ -16,6 +16,7 @@ import {
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Paginationdto } from 'src/common/dto/pagination.dto';
 import { AuthGuard } from 'src/guards/AuthGuard';
+import { SearchQueryDto } from 'src/user-profile/dto/searchQuery.dto';
 import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
 import {
   GetOrganisation,
@@ -29,6 +30,7 @@ import {
   OrganisationReviewResponseDto,
   ReviewListDto,
 } from './dto/orgReviewDto.dto';
+import { SearchOrganizationsResponseDto } from './dto/serachOrganizations.dto';
 import { OrganisationService } from './organisation.service';
 
 @ApiTags('Organisation')
@@ -194,6 +196,24 @@ export class OrganisationController {
       status: true,
       message: 'organisation review deleted successfully',
       data: 'review deleted',
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/search')
+  private async SearchOrganization(
+    @Req() req,
+    @Query() query: SearchQueryDto,
+  ): Promise<SearchOrganizationsResponseDto> {
+    const searches = await this.organisationService.searchOrganizations(
+      query.text,
+      query.page || 0,
+      query.limit || 10,
+    );
+    return {
+      status: true,
+      message: 'got searched data',
+      data: searches,
     };
   }
 }
