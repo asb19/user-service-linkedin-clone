@@ -335,6 +335,9 @@ export class UserProfileService {
             update: {
               firstName: body.userProfileDetails.firstName || undefined,
               lastName: body.userProfileDetails.lastName || undefined,
+              altContactNo: body.userProfileDetails.altNumber || undefined,
+              altEmail: body.userProfileDetails.altEmail || undefined,
+              contactNo: body.userProfileDetails.contact || undefined,
             },
           },
           dob:

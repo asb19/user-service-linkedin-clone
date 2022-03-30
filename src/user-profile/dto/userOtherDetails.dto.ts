@@ -73,6 +73,9 @@ export class UserProfileDto {
   mediaUrls?: string[];
   firstName?: string;
   lastName?: string;
+  altEmail?: string;
+  altNumber?: string;
+  contact?: string;
 }
 
 export class UserCertificateDetailsDto {
