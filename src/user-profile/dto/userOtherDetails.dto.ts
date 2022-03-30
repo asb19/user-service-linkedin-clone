@@ -71,6 +71,8 @@ export class UserProfileDto {
   passportPlaceAndCountryOfIssue?: string;
   passportValidity?: string;
   mediaUrls?: string[];
+  firstName?: string;
+  lastName?: string;
 }
 
 export class UserCertificateDetailsDto {

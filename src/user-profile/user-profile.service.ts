@@ -331,18 +331,40 @@ export class UserProfileService {
             body.userProfileDetails && body.userProfileDetails.gender
               ? body.userProfileDetails.gender
               : undefined,
+          User: {
+            update: {
+              firstName: body.userProfileDetails.firstName || undefined,
+              lastName: body.userProfileDetails.lastName || undefined,
+            },
+          },
           dob:
             body.userProfileDetails && body.userProfileDetails.dob
               ? new Date(body.userProfileDetails.dob)
               : undefined,
 
-          currentLocationId:
+          // currentLocationId:
+          //   body.userProfileDetails && body.userProfileDetails.currentLocationId
+          //     ? {set: }
+          //     : undefined,
+          currentLocation:
             body.userProfileDetails && body.userProfileDetails.currentLocationId
-              ? body.userProfileDetails.currentLocationId
+              ? {
+                  connect: {
+                    id: body.userProfileDetails.currentLocationId,
+                  },
+                }
               : undefined,
-          homeLocationId:
+          // homeLocationId:
+          //   body.userProfileDetails && body.userProfileDetails.homeLocationId
+          //     ? body.userProfileDetails.homeLocationId
+          //     : undefined,
+          homeLocation:
             body.userProfileDetails && body.userProfileDetails.homeLocationId
-              ? body.userProfileDetails.homeLocationId
+              ? {
+                  connect: {
+                    id: body.userProfileDetails.homeLocationId,
+                  },
+                }
               : undefined,
           preferredLocations:
             body.userProfileDetails &&
