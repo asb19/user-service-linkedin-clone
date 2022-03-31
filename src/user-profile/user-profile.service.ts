@@ -327,6 +327,7 @@ export class UserProfileService {
           userId,
         },
         data: {
+          photoUrl: body.userProfileDetails.photoUrl || undefined,
           gender:
             body.userProfileDetails && body.userProfileDetails.gender
               ? body.userProfileDetails.gender
