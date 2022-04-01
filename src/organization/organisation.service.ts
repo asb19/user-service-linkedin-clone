@@ -6,16 +6,19 @@ import {
 } from '.prisma/client';
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { resourceLimits } from 'worker_threads';
 import { CreateOrganisationDto } from './dto/createOrganisationDto.dto';
+import { AdminListDto, OrganisationAdminListDto } from './dto/orgAdmins.dto';
 import {
   OrganisationReviewDto,
   OrganisationReviewListDto,
 } from './dto/orgReviewDto.dto';
+import { RemoveAdminDto } from './dto/removeAdmin.dto';
 import { SearchOrganizationsDto } from './dto/serachOrganizations.dto';
 
 @Injectable()
@@ -429,6 +432,14 @@ export class OrganisationService {
     orgId: number,
     userEmail: string,
   ): Promise<OrganisationInvites> {
+    const userExists = await this.prismaService.user.findUnique({
+      where: {
+        email: userEmail,
+      },
+    });
+    if (!userExists)
+      throw new NotFoundException(`user with email-${userEmail} not found!!`);
+
     const user = await this.prismaService.organisationInvites.findFirst({
       where: {
         userEmail,
@@ -443,6 +454,82 @@ export class OrganisationService {
         userEmail,
       },
     });
+  }
+
+  public async removeAsAdmin(
+    orgId: number,
+    userId: string,
+    recruiterRelationId: string,
+  ): Promise<RemoveAdminDto> {
+    const checkAdmin =
+      await this.prismaService.organisationRecruiters.findFirst({
+        where: {
+          userId,
+          orgId,
+        },
+        select: {
+          role: true,
+        },
+      });
+    if (!checkAdmin) throw new ForbiddenException('Not Allowed');
+    await this.prismaService.organisationRecruiters.delete({
+      where: {
+        id: recruiterRelationId,
+      },
+    });
+    return {
+      removed: true,
+    };
+  }
+
+  public async getAdminsList(
+    orgId: number,
+    userId: string,
+  ): Promise<AdminListDto> {
+    const checkAdmin =
+      await this.prismaService.organisationRecruiters.findFirst({
+        where: {
+          userId,
+        },
+        select: {
+          role: true,
+        },
+      });
+    if (!checkAdmin) throw new ForbiddenException('Not Allowed');
+
+    const admins = await this.prismaService.organisationRecruiters.findMany({
+      where: {
+        orgId,
+      },
+      select: {
+        id: true,
+        User: {
+          select: {
+            firstName: true,
+            lastName: true,
+            id: true,
+            UserProfile: {
+              select: {
+                photoUrl: true,
+              },
+            },
+          },
+        },
+        role: true,
+        status: true,
+      },
+    });
+
+    const result: OrganisationAdminListDto[] = admins.map((admin) => ({
+      userId: admin.User.id,
+      firstName: admin.User.firstName,
+      lastName: admin.User.lastName,
+      photoUrl: admin.User.UserProfile && admin.User.UserProfile.photoUrl,
+      status: admin.status,
+      role: admin.role,
+      id: admin.id,
+    }));
+    return { ownerAccess: checkAdmin.role == 'OWNER', adminList: result };
   }
 
   public async createOrUpdateReview(

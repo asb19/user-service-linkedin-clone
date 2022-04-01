@@ -13,7 +13,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Paginationdto } from 'src/common/dto/pagination.dto';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { SearchQueryDto } from 'src/user-profile/dto/searchQuery.dto';
@@ -24,12 +24,14 @@ import {
   GetRecruiters,
 } from './dto/getOrganisationResponseDto.dto';
 import { InviteToOrganisationDto } from './dto/invite.dto';
+import { AdminListResponseDto } from './dto/orgAdmins.dto';
 import {
   OrganisationDeleteReviewResponseDto,
   OrganisationReviewDto,
   OrganisationReviewResponseDto,
   ReviewListDto,
 } from './dto/orgReviewDto.dto';
+import { RemoveAdminResponseDto } from './dto/removeAdmin.dto';
 import { SearchOrganizationsResponseDto } from './dto/serachOrganizations.dto';
 import { OrganisationService } from './organisation.service';
 
@@ -116,6 +118,49 @@ export class OrganisationController {
     const invite = await this.organisationService.inviteUser(
       parseInt(query.orgid),
       query.email,
+    );
+    return {
+      status: true,
+      message: 'invites ent',
+      data: invite,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/orgAdmins')
+  @ApiQuery({ name: 'orgid', example: '25' })
+  private async adminsFetch(
+    @Query() query: { orgid: string },
+    @Req() req,
+  ): Promise<AdminListResponseDto> {
+    const adminData = await this.organisationService.getAdminsList(
+      parseInt(query.orgid),
+      req.user.id,
+    );
+    return {
+      status: true,
+      message: 'invites ent',
+      data: adminData,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/removeAdminAccess/:id')
+  @ApiQuery({ name: 'orgid', example: '25' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'please provide the id fetched from get orgAdmins api',
+  })
+  private async removeAdmin(
+    @Query() query: { orgid: string; email: string },
+    @Req() req,
+    @Param('id') id: string,
+  ): Promise<RemoveAdminResponseDto> {
+    const invite = await this.organisationService.removeAsAdmin(
+      parseInt(query.orgid),
+      req.user.id,
+      id,
     );
     return {
       status: true,

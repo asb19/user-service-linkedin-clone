@@ -14,6 +14,7 @@ import { generateHash } from 'src/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/updateUserDto.dto';
 import { ConfigurationService } from 'src/configuration/configuration.service';
+import { InviteActionDataDto } from './dto/inviteAction.sto';
 
 @Injectable()
 export class UserService {
@@ -31,8 +32,17 @@ export class UserService {
     });
   }
 
-  public async iviteAsAdmin(username: string, orgId: number): Promise<User> {
-    const user = await this.findUser(username);
+  public async iviteAsAdmin(
+    userId: string,
+    orgId: number,
+    action: number,
+    inviteId: number,
+  ): Promise<InviteActionDataDto> {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
     if (!user) throw new NotFoundException('user not found');
     const relation = await this.prismaService.organisationRecruiters.findFirst({
       where: {
@@ -40,9 +50,31 @@ export class UserService {
       },
     });
 
-    if (relation)
+    if (relation) {
+      await this.prismaService.organisationInvites.update({
+        where: {
+          id: inviteId,
+        },
+        data: {
+          status: 'failed',
+        },
+      });
       throw new BadRequestException('already a member of another organisation');
-    return await this.prismaService.user.update({
+    }
+    if (!action) {
+      await this.prismaService.organisationInvites.update({
+        where: {
+          id: inviteId,
+        },
+        data: {
+          status: 'rejected',
+        },
+      });
+      return {
+        accepted: false,
+      };
+    }
+    await this.prismaService.user.update({
       where: {
         id: user.id,
       },
@@ -55,6 +87,9 @@ export class UserService {
         userType: 'recruiter',
       },
     });
+    return {
+      accepted: true,
+    };
   }
 
   public async createUser(username: string, password: string): Promise<User> {

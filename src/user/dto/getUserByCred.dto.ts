@@ -6,5 +6,8 @@ export class UserByUserNameDto {
 }
 
 export class InviteActionDto extends UserByUserNameDto {
+  @ApiProperty()
   public orgid: string;
+  public inviteId: number;
+  public action: number;
 }

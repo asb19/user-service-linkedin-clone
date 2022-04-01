@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -15,6 +16,7 @@ import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import { InviteActionDto, UserByUserNameDto } from './dto/getUserByCred.dto';
 import { GetUser } from './dto/getUserResponse.dto';
+import { InviteActionresponseDto } from './dto/inviteAction.sto';
 import { ResetPasswordDto } from './dto/resetPasswordDto.dto';
 import { RegisterQueryDto, UpdateUserDto } from './dto/updateUserDto.dto';
 import { UserService } from './user.service';
@@ -75,12 +77,22 @@ export class UserController {
     return `deleted user with email- ${email}`;
   }
 
-  @Post('/makeAdmin')
-  public async inviteAction(@Query() query: InviteActionDto): Promise<User> {
-    const user = await this.userService.iviteAsAdmin(
-      query.username,
+  @UseGuards(AuthGuard)
+  @Post('/inviteAction')
+  public async inviteAction(
+    @Query() query: InviteActionDto,
+    @Req() req,
+  ): Promise<InviteActionresponseDto> {
+    const data = await this.userService.iviteAsAdmin(
+      req.user.id,
       parseInt(query.orgid),
+      query.action,
+      query.inviteId,
     );
-    return user;
+    return {
+      status: true,
+      message: 'user took action on invitation',
+      data,
+    };
   }
 }
