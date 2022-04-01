@@ -5,7 +5,7 @@ export class UserByUserNameDto {
   public username!: string;
 }
 
-export class InviteActionDto extends UserByUserNameDto {
+export class InviteActionDto {
   @ApiProperty()
   public orgid: string;
   public inviteId: number;

@@ -79,6 +79,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Post('/inviteAction')
+  @ApiQuery({ name: 'action', example: 1, enum: [0, 1] })
   public async inviteAction(
     @Query() query: InviteActionDto,
     @Req() req,
