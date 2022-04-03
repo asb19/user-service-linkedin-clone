@@ -18,6 +18,7 @@ import {
 } from './dto/getUserProfileResponse.dto';
 import { SearchQueryDto } from './dto/searchQuery.dto';
 import { SearchResponseDto } from './dto/searchUsers.dto';
+import { UserInviteOrgResponseDto } from './dto/userInvitedByOrg.dto';
 import { UserProfileService } from './user-profile.service';
 
 @ApiTags('UserProfile')
@@ -72,6 +73,23 @@ export class UserProfileController {
       status: true,
       message: 'got profile data',
       data: userProfile,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/getInvites')
+  private async getInvites(
+    @Req() req,
+    @Query('email') email: string,
+  ): Promise<UserInviteOrgResponseDto> {
+    const invite = await this.userProfileService.getUserInvitesForOrg(
+      req.user.id,
+      email,
+    );
+    return {
+      status: true,
+      message: 'got invite data',
+      data: invite,
     };
   }
 

@@ -5,6 +5,7 @@ import { transformDocument } from '@prisma/client/runtime';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserProfileDto } from './dto/createUserProfileDto.dto';
 import { SearchUsersByNameDto } from './dto/searchUsers.dto';
+import { UserInvititaionOrgDto } from './dto/userInvitedByOrg.dto';
 
 @Injectable()
 export class UserProfileService {
@@ -981,5 +982,39 @@ export class UserProfileService {
         user.UserProfile?.UserProfessionalDetail?.Experiences[0]?.designation,
     }));
     return searchData;
+  }
+
+  public async getUserInvitesForOrg(
+    userEmail: string,
+    userId: string,
+  ): Promise<UserInvititaionOrgDto> {
+    const invite = await this.prismaService.organisationInvites.findFirst({
+      where: {
+        userEmail,
+        status: { equals: 'pending' },
+      },
+    });
+    const orgDetails = await this.prismaService.organisation.findUnique({
+      where: {
+        id: invite.orgId,
+      },
+      select: {
+        fullName: true,
+        logo: true,
+        location: true,
+      },
+    });
+
+    return {
+      id: invite.id,
+      location: orgDetails.location,
+      orgLogo: orgDetails.logo,
+      orgName: orgDetails.fullName,
+      status: invite.status,
+      createdAt: invite.createdAt,
+      userId: userId,
+      orgId: invite.orgId,
+      text: `You are invited to become an Admin in ${orgDetails.fullName}`,
+    };
   }
 }
