@@ -10,6 +10,7 @@ export class OrganisationAdminListDto {
   public status: number;
   public role: string;
   public id: string;
+  public email: string;
 }
 
 export class AdminListDto {

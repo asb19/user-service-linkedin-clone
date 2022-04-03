@@ -508,6 +508,7 @@ export class OrganisationService {
             firstName: true,
             lastName: true,
             id: true,
+            email: true,
             UserProfile: {
               select: {
                 photoUrl: true,
@@ -528,6 +529,7 @@ export class OrganisationService {
       status: admin.status,
       role: admin.role,
       id: admin.id,
+      email: admin.User.email,
     }));
     return { ownerAccess: checkAdmin.role == 'OWNER', adminList: result };
   }

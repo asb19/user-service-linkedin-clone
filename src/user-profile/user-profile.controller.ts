@@ -83,8 +83,8 @@ export class UserProfileController {
     @Query('email') email: string,
   ): Promise<UserInviteOrgResponseDto> {
     const invite = await this.userProfileService.getUserInvitesForOrg(
-      req.user.id,
       email,
+      req.user.id,
     );
     return {
       status: true,
