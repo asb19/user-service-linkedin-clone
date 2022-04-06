@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -69,6 +70,20 @@ export class UserProfileController {
     const userProfile = await this.userProfileService.getProfileDetails(
       req.user.id,
     );
+    return {
+      status: true,
+      message: 'got profile data',
+      data: userProfile,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/getUserDetails/:userId')
+  private async GetUserDetails(
+    @Req() req,
+    @Param('userId') userId: string,
+  ): Promise<GetUserProfileWithOtherDetailsDto> {
+    const userProfile = await this.userProfileService.getProfileDetails(userId);
     return {
       status: true,
       message: 'got profile data',
