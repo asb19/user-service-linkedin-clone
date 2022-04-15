@@ -518,6 +518,10 @@ export class OrganisationService {
         },
         role: true,
         status: true,
+        createdAt: true,
+      },
+      orderBy: {
+        role: 'desc',
       },
     });
 
