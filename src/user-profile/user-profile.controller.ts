@@ -103,7 +103,7 @@ export class UserProfileController {
     );
     return {
       status: true,
-      message: 'got invite data',
+      message: invite ? 'no invite data' : 'got invite data',
       data: invite,
     };
   }
