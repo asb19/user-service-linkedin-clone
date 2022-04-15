@@ -534,6 +534,7 @@ export class OrganisationService {
       role: admin.role,
       id: admin.id,
       email: admin.User.email,
+      createdAt: admin.createdAt,
     }));
     return { ownerAccess: checkAdmin.role == 'OWNER', adminList: result };
   }
