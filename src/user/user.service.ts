@@ -87,6 +87,15 @@ export class UserService {
         userType: 'recruiter',
       },
     });
+
+    await this.prismaService.organisationInvites.update({
+      where: {
+        id: inviteId,
+      },
+      data: {
+        status: 'accepted',
+      },
+    });
     return {
       accepted: true,
     };

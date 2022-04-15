@@ -994,7 +994,7 @@ export class UserProfileService {
         status: { equals: 'pending' },
       },
     });
-    if (!invite) throw new NotFoundException('no invites found');
+    if (!invite) return null;
     const orgDetails = await this.prismaService.organisation.findUnique({
       where: {
         id: invite.orgId,
