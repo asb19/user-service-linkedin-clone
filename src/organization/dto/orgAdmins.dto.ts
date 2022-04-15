@@ -11,6 +11,7 @@ export class OrganisationAdminListDto {
   public role: string;
   public id: string;
   public email: string;
+  public createdAt: Date;
 }
 
 export class AdminListDto {
