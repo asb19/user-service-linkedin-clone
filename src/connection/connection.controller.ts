@@ -7,7 +7,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { CONNECTION_STATUS } from 'src/common/interfaces/connectionStatus';
 import { AuthGuard } from 'src/guards/AuthGuard';
 import { CreateOrganisationDto } from 'src/organization/dto/createOrganisationDto.dto';
 import { ConnectionService } from './connection.service';
@@ -16,6 +17,7 @@ import {
   ConnectionCreateResponseDto,
   FollowPageCreateResponseDto,
 } from './dtos/connectionCraete.dto';
+import { FetchConnectionQueryDto } from './dtos/fetchConnectionQuery.dto';
 import {
   FetchConnectionresponseDto,
   FetchPageFollowresponseDto,
@@ -82,11 +84,14 @@ export class ConnectionController {
 
   @UseGuards(AuthGuard)
   @Post('/fetchConnections')
+  @ApiQuery({ name: 'status', enum: CONNECTION_STATUS })
   private async fetchConnections(
     @Req() req,
+    @Query() query: FetchConnectionQueryDto,
   ): Promise<FetchConnectionresponseDto> {
     const connections = await this.connectionService.getConnections(
       req.user.id,
+      query.status,
     );
     return {
       status: true,

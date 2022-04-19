@@ -96,7 +96,10 @@ export class ConnectionService {
     }
   }
 
-  public async getConnections(userId: string): Promise<FetchConnectionsDto[]> {
+  public async getConnections(
+    userId: string,
+    status: string,
+  ): Promise<FetchConnectionsDto[]> {
     try {
       const connections = await this.prismaService.connectionMapping.findMany({
         where: {
@@ -108,7 +111,7 @@ export class ConnectionService {
               connectionId: userId,
             },
           ],
-          status: 'accepted',
+          status,
         },
       });
       console.log(connections);
