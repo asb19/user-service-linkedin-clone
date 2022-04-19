@@ -26,7 +26,10 @@ model User {
   updatedAt     DateTime?
   UserProfile   UserProfile?
 
-  OrganisationRecruiters OrganisationRecruiters[]
+  OrganisationRecruiters         OrganisationRecruiters[]
+  ConnectionMappingForUser       ConnectionMapping[]      @relation("user_connection_map")
+  ConnectionMappingForConnection ConnectionMapping[]      @relation("connection_user_map")
+  PageFollowMapping              PageFollowMapping[]
 }
 
 model UserProfile {
@@ -279,6 +282,7 @@ model Organisation {
   OrgContactDetails      OrgContactDetails?
   OrgEventDetails        OrgEventDetails[]
   OrganisationRecruiters OrganisationRecruiters[]
+  PageFollowMapping      PageFollowMapping[]      @relation("org_follow")
 }
 
 model OrganisationRecruiters {
@@ -382,6 +386,27 @@ model OrganisationReviews {
   userDetail  String    @default("individual")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime?
+}
+
+model ConnectionMapping {
+  id           String    @id @default(cuid())
+  userId       String
+  connectionId String
+  status       String    @default("requested")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime?
+  User         User      @relation(fields: [userId], references: [id], name: "user_connection_map")
+  Connection   User      @relation(fields: [connectionId], references: [id], name: "connection_user_map")
+}
+
+model PageFollowMapping {
+  id               String       @id @default(cuid())
+  userId           String
+  orgId            Int
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime?
+  User             User         @relation(fields: [userId], references: [id])
+  OrgFollowMapping Organisation @relation(fields: [orgId], references: [id], name: "org_follow")
 }
 
 model Country {

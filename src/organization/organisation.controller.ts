@@ -164,7 +164,7 @@ export class OrganisationController {
     );
     return {
       status: true,
-      message: 'invites ent',
+      message: 'removed from admin list',
       data: invite,
     };
   }

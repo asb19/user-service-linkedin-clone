@@ -9,6 +9,7 @@ import { UserProfileModule } from './user-profile/user-profile.module';
 import { OrganisationModule } from './organization/organisation.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { AppLoggerMiddleware } from './common/dto/middleware/requestLogger.middleware';
+import { ConnectionModule } from './connection/connection.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AppLoggerMiddleware } from './common/dto/middleware/requestLogger.middl
       isGlobal: true,
     }),
     ConfigurationModule,
+    ConnectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
