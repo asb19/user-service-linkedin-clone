@@ -46,7 +46,7 @@ export class ConnectionService {
         },
       });
 
-      if (checkEntry) throw new BadRequestException(`no connection found`);
+      if (!checkEntry) throw new BadRequestException(`no connection found`);
       return action == 0
         ? await this.prismaService.connectionMapping.delete({
             where: {
@@ -81,6 +81,7 @@ export class ConnectionService {
           status: 'accepted',
         },
       });
+      console.log(connections);
 
       const result: FetchConnectionsDto[] = [];
       for (const entry of connections) {
