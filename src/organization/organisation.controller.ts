@@ -121,7 +121,7 @@ export class OrganisationController {
     );
     return {
       status: true,
-      message: 'invites ent',
+      message: 'invite sent',
       data: invite,
     };
   }
