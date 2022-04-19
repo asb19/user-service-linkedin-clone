@@ -1,8 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CONNECTION_STATUS } from 'src/common/interfaces/connectionStatus';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ConnectionCreateDto } from './dtos/connectionCraete.dto';
-import { FetchConnectionsDto } from './dtos/fetchConnections.dto';
+import {
+  ConnectionCreateDto,
+  FollowOrganisationDto,
+} from './dtos/connectionCraete.dto';
+import {
+  FetchConnectionsDto,
+  FetchPageFollowDto,
+} from './dtos/fetchConnections.dto';
 
 @Injectable()
 export class ConnectionService {
@@ -27,6 +33,30 @@ export class ConnectionService {
           userId,
           connectionId,
           status: 'requested',
+        },
+      });
+    } catch (err) {
+      throw new BadRequestException(err.message);
+    }
+  }
+
+  public async followPage(
+    userId: string,
+    orgId: number,
+  ): Promise<FollowOrganisationDto> {
+    try {
+      const checkEntry = await this.prismaService.pageFollowMapping.findFirst({
+        where: {
+          userId,
+          orgId,
+        },
+      });
+
+      if (checkEntry) throw new BadRequestException(`already following`);
+      return await this.prismaService.pageFollowMapping.create({
+        data: {
+          userId,
+          orgId,
         },
       });
     } catch (err) {
@@ -105,6 +135,38 @@ export class ConnectionService {
           connectionId: profileId,
           name: profile.firstName + ' ' + profile.lastName,
           photoUrl: profile.UserProfile?.photoUrl,
+        });
+      }
+      return result;
+    } catch (err) {
+      throw new BadRequestException(err.message);
+    }
+  }
+
+  public async getFollowedPages(userId: string): Promise<FetchPageFollowDto[]> {
+    try {
+      const connections = await this.prismaService.pageFollowMapping.findMany({
+        where: {
+          userId,
+        },
+      });
+      console.log(connections);
+
+      const result: FetchPageFollowDto[] = [];
+      for (const entry of connections) {
+        const profile = await this.prismaService.organisation.findUnique({
+          where: {
+            id: entry.orgId,
+          },
+          select: {
+            fullName: true,
+            logo: true,
+          },
+        });
+        result.push({
+          orgId: entry.orgId,
+          name: profile.fullName,
+          logo: profile.logo,
         });
       }
       return result;
