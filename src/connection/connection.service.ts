@@ -237,9 +237,10 @@ export class ConnectionService {
         result.push({
           designation: entry.designation,
           isCurrent: entry.isCurrent,
-          connectionStatus: profile.ConnectionMappingForConnection
-            ? profile.ConnectionMappingForConnection[0].status
-            : 'new',
+          connectionStatus:
+            profile.ConnectionMappingForConnection.length > 0
+              ? profile.ConnectionMappingForConnection[0].status
+              : 'new',
 
           name: profile.firstName + ' ' + profile.lastName,
           photoUrl: profile.UserProfile.photoUrl,
