@@ -21,6 +21,7 @@ import { FetchConnectionQueryDto } from './dtos/fetchConnectionQuery.dto';
 import {
   FetchConnectionresponseDto,
   FetchPageFollowresponseDto,
+  FetchPeopleResponseDto,
 } from './dtos/fetchConnections.dto';
 
 @ApiTags('Connection')
@@ -111,6 +112,23 @@ export class ConnectionController {
     return {
       status: true,
       message: 'connection fetched successfully',
+      data: connections,
+    };
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/fetchPeople/:id')
+  private async fetchPeopleOrg(
+    @Req() req,
+    @Param('id') id: string,
+  ): Promise<FetchPeopleResponseDto> {
+    const connections = await this.connectionService.getOrganisationPeople(
+      parseInt(id),
+      req.user.id,
+    );
+    return {
+      status: true,
+      message: 'people fetched successfully',
       data: connections,
     };
   }

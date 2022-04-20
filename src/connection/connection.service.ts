@@ -8,6 +8,7 @@ import {
 import {
   FetchConnectionsDto,
   FetchPageFollowDto,
+  FetchPeopleOrganisationDto,
 } from './dtos/fetchConnections.dto';
 
 @Injectable()
@@ -170,6 +171,78 @@ export class ConnectionService {
           orgId: entry.orgId,
           name: profile.fullName,
           logo: profile.logo,
+        });
+      }
+      return result;
+    } catch (err) {
+      throw new BadRequestException(err.message);
+    }
+  }
+
+  public async getOrganisationPeople(
+    orgId: number,
+    userId: string,
+  ): Promise<FetchPeopleOrganisationDto[]> {
+    try {
+      const experiences = await this.prismaService.userExperience.findMany({
+        where: {
+          organisationId: orgId,
+        },
+        distinct: 'professionalId',
+        select: {
+          UserProfessionalDetail: {
+            select: {
+              userId: true,
+            },
+          },
+          designation: true,
+          isCurrent: true,
+        },
+      });
+
+      const result: FetchPeopleOrganisationDto[] = [];
+      for (const entry of experiences) {
+        const profile = await this.prismaService.user.findUnique({
+          where: {
+            id: entry.UserProfessionalDetail.userId,
+          },
+          select: {
+            firstName: true,
+            lastName: true,
+            UserProfile: {
+              select: {
+                photoUrl: true,
+              },
+            },
+            ConnectionMappingForConnection: {
+              where: {
+                OR: [
+                  {
+                    userId: entry.UserProfessionalDetail.userId,
+                    connectionId: userId,
+                  },
+                  {
+                    connectionId: entry.UserProfessionalDetail.userId,
+                    userId,
+                  },
+                ],
+              },
+              select: {
+                status: true,
+              },
+              take: 1,
+            },
+          },
+        });
+        result.push({
+          designation: entry.designation,
+          isCurrent: entry.isCurrent,
+          connectionStatus: profile.ConnectionMappingForConnection
+            ? profile.ConnectionMappingForConnection[0].status
+            : 'new',
+
+          name: profile.firstName + ' ' + profile.lastName,
+          photoUrl: profile.UserProfile.photoUrl,
         });
       }
       return result;
