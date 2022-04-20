@@ -13,5 +13,7 @@ export class GetUserProfileWithOtherDetailsDto extends ResponseDto {
       id: number;
       logo: string;
     };
+    connectionsCount: number;
+    followingPagesCount: number;
   };
 }

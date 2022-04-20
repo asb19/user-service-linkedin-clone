@@ -797,6 +797,8 @@ export class UserProfileService {
 
   public async getProfileDetails(userId: string): Promise<
     UserProfile & {
+      connectionsCount: number;
+      followingPagesCount: number;
       organisationId: number;
       Organisation: {
         fullName: string;
@@ -805,7 +807,7 @@ export class UserProfileService {
       };
     }
   > {
-    const [user, orgData] = await Promise.all([
+    const [user, orgData, connection, pages] = await Promise.all([
       this.prismaService.userProfile.findUnique({
         where: {
           userId,
@@ -907,9 +909,30 @@ export class UserProfileService {
           },
         },
       }),
+      this.prismaService.connectionMapping.count({
+        where: {
+          OR: [
+            {
+              userId,
+            },
+            {
+              connectionId: userId,
+            },
+          ],
+          status: 'accepted',
+        },
+      }),
+      this.prismaService.pageFollowMapping.count({
+        where: {
+          userId,
+        },
+      }),
     ]);
     return {
       ...user,
+      connectionsCount: connection,
+      followingPagesCount: pages,
+
       organisationId: orgData ? orgData.Organisation.id : undefined,
       Organisation: orgData
         ? {
