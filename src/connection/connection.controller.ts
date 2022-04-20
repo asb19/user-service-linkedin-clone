@@ -132,4 +132,22 @@ export class ConnectionController {
       data: connections,
     };
   }
+
+  @UseGuards(AuthGuard)
+  @Post('/fetchMutualPeople/:id')
+  private async fetchMutualPeopleOrg(
+    @Req() req,
+    @Param('id') id: string,
+  ): Promise<FetchPeopleResponseDto> {
+    const connections =
+      await this.connectionService.getOrganisationMutualPeople(
+        parseInt(id),
+        req.user.id,
+      );
+    return {
+      status: true,
+      message: 'mutual people fetched successfully',
+      data: connections,
+    };
+  }
 }

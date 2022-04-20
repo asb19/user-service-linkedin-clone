@@ -187,6 +187,7 @@ export class ConnectionService {
       const experiences = await this.prismaService.userExperience.findMany({
         where: {
           organisationId: orgId,
+          statusCode: 1,
         },
         distinct: 'professionalId',
         select: {
@@ -214,18 +215,18 @@ export class ConnectionService {
                 photoUrl: true,
               },
             },
+            ConnectionMappingForUser: {
+              where: {
+                connectionId: userId,
+              },
+              select: {
+                status: true,
+              },
+              take: 1,
+            },
             ConnectionMappingForConnection: {
               where: {
-                OR: [
-                  {
-                    userId: entry.UserProfessionalDetail.userId,
-                    connectionId: userId,
-                  },
-                  {
-                    connectionId: entry.UserProfessionalDetail.userId,
-                    userId,
-                  },
-                ],
+                userId,
               },
               select: {
                 status: true,
@@ -235,17 +236,107 @@ export class ConnectionService {
           },
         });
         result.push({
+          connectionId: entry.UserProfessionalDetail.userId,
           designation: entry.designation,
           isCurrent: entry.isCurrent,
           connectionStatus:
-            profile.ConnectionMappingForConnection.length > 0
+            profile.ConnectionMappingForConnection.length == 0 &&
+            profile.ConnectionMappingForUser.length == 0
+              ? 'new'
+              : profile.ConnectionMappingForConnection.length > 0
               ? profile.ConnectionMappingForConnection[0].status
-              : 'new',
+              : profile.ConnectionMappingForUser[0].status,
 
           name: profile.firstName + ' ' + profile.lastName,
           photoUrl: profile.UserProfile.photoUrl,
         });
       }
+      return result;
+    } catch (err) {
+      throw new BadRequestException(err.message);
+    }
+  }
+
+  public async getOrganisationMutualPeople(
+    orgId: number,
+    userId: string,
+  ): Promise<FetchPeopleOrganisationDto[]> {
+    try {
+      const experiences = await this.prismaService.userExperience.findMany({
+        where: {
+          organisationId: orgId,
+          statusCode: 1,
+        },
+        distinct: 'professionalId',
+        select: {
+          UserProfessionalDetail: {
+            select: {
+              userId: true,
+            },
+          },
+          designation: true,
+          isCurrent: true,
+        },
+      });
+
+      const result: FetchPeopleOrganisationDto[] = [];
+      for (const entry of experiences) {
+        const profile = await this.prismaService.user.findUnique({
+          where: {
+            id: entry.UserProfessionalDetail.userId,
+          },
+          select: {
+            firstName: true,
+            lastName: true,
+            UserProfile: {
+              select: {
+                photoUrl: true,
+              },
+            },
+            ConnectionMappingForUser: {
+              where: {
+                connectionId: userId,
+
+                status: 'accepted',
+              },
+              select: {
+                status: true,
+              },
+              take: 1,
+            },
+            ConnectionMappingForConnection: {
+              where: {
+                userId,
+
+                status: 'accepted',
+              },
+              select: {
+                status: true,
+              },
+              take: 1,
+            },
+          },
+        });
+
+        if (
+          profile.ConnectionMappingForConnection.length == 0 &&
+          profile.ConnectionMappingForUser.length == 0
+        )
+          continue;
+        result.push({
+          connectionId: entry.UserProfessionalDetail.userId,
+          designation: entry.designation,
+          isCurrent: entry.isCurrent,
+          connectionStatus:
+            profile.ConnectionMappingForUser.length > 0
+              ? profile.ConnectionMappingForUser[0].status
+              : profile.ConnectionMappingForConnection[0].status,
+
+          name: profile.firstName + ' ' + profile.lastName,
+          photoUrl: profile.UserProfile.photoUrl,
+        });
+      }
+
       return result;
     } catch (err) {
       throw new BadRequestException(err.message);

@@ -18,6 +18,7 @@ export class FetchPeopleOrganisationDto {
   public name: string;
   public connectionStatus: string;
   public isCurrent: boolean;
+  public connectionId: string;
 }
 
 export class FetchConnectionresponseDto extends ResponseDto {
